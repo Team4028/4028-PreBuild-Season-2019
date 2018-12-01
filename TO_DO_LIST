@@ -1,0 +1,18 @@
+ _________  ________          ________  ________          ___       ___  ________  _________   
+|\___   ___\\   __  \        |\   ___ \|\   __  \        |\  \     |\  \|\   ____\|\___   ___\ 
+\|___ \  \_\ \  \|\  \       \ \  \_|\ \ \  \|\  \       \ \  \    \ \  \ \  \___|\|___ \  \_| 
+     \ \  \ \ \  \\\  \       \ \  \ \\ \ \  \\\  \       \ \  \    \ \  \ \_____  \   \ \  \  
+      \ \  \ \ \  \\\  \       \ \  \_\\ \ \  \\\  \       \ \  \____\ \  \|____|\  \   \ \  \ 
+       \ \__\ \ \_______\       \ \_______\ \_______\       \ \_______\ \__\____\_\  \   \ \__\
+        \|__|  \|_______|        \|_______|\|_______|        \|_______|\|__|\_________\   \|__|
+                                                                           \|_________|       
+This is intended as an organizational tool to layout all projects/functions that I want to impliment (Not Priority Ranked):
+1. [DONE] Set up Safety procedures:
+    a) [DONE] Automatic Flap Down when elevator reaches certain height
+    b) [DONE] Infeed Wheels won't spin in Home/Store Positions
+    c) [DONE] Climber Servo only works at Climb Height
+    d) [DONE] Automatic speed decrease when elevator is up
+2. Auton Mumbo Jumbo (not Prat's issue)
+3. [Done] Dashboard Info 
+4. Logging Option
+5. 
