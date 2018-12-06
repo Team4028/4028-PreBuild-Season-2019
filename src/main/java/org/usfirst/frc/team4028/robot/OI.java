@@ -1,27 +1,7 @@
 package org.usfirst.frc.team4028.robot;
 
 //#region Define Imports
-import org.usfirst.frc.team4028.robot.commands.Elevator_MoveElevatorToPresetPosition;
-import org.usfirst.frc.team4028.robot.commands.Infeed_MoveInfeedArmsToPresetPosition;
-import org.usfirst.frc.team4028.robot.commands.Infeed_RunInfeedWheels;
-import org.usfirst.frc.team4028.robot.commands.Infeed_ZeroInfeedArms;
-import org.usfirst.frc.team4028.robot.commands.Infeed_RunInfeedWheels.INFEED_WHEELS_FUNCTION;
-import org.usfirst.frc.team4028.robot.commands.Carriage_ToggleSqueezeSolenoid.CARRIAGE_SQUEEZE_FUNCTIONS;
-import org.usfirst.frc.team4028.robot.commands.Elevator_BumpElevatorPosition.ELEVATOR_BUMP_FUNCTION;
-import org.usfirst.frc.team4028.robot.commands.Chassis_ShiftGear;
-import org.usfirst.frc.team4028.robot.commands.Elevator_BumpElevatorPosition;
-import org.usfirst.frc.team4028.robot.commands.Chassis_DriveWithControllers;
-import org.usfirst.frc.team4028.robot.commands.ToggleActiveCamera;
-import org.usfirst.frc.team4028.robot.commands.Carriage_BumpCarriageVBus.CARRIAGE_BUMP_FUNCTION;
-import org.usfirst.frc.team4028.robot.commands.Carriage_ToggleFlapSolenoid;
-import org.usfirst.frc.team4028.robot.commands.Carriage_ToggleSqueezeSolenoid;
-import org.usfirst.frc.team4028.robot.commands.CG_ClimbPosition;
-import org.usfirst.frc.team4028.robot.commands.CG_InfeedCube;
-import org.usfirst.frc.team4028.robot.commands.CG_OutfeedCube;
-import org.usfirst.frc.team4028.robot.commands.CG_StopInfeeding;
-import org.usfirst.frc.team4028.robot.commands.Carriage_BumpCarriageVBus;
-import org.usfirst.frc.team4028.robot.subsystems.Elevator.ELEVATOR_TARGET_POSITION;
-import org.usfirst.frc.team4028.robot.subsystems.Infeed.INFEED_ARM_TARGET_POSITION;
+
 import org.usfirst.frc.team4028.robot.util.BeakXboxController;
 
 import edu.wpi.first.wpilibj.GenericHID.Hand;
@@ -81,47 +61,12 @@ public class OI {
 		//==========================================================
 		
 		// Driver Controller -> Command Mapping
-		DriverController.a.whenPressed(new Infeed_MoveInfeedArmsToPresetPosition(INFEED_ARM_TARGET_POSITION.SQUEEZE));
-		DriverController.b.whenPressed(new Infeed_MoveInfeedArmsToPresetPosition(INFEED_ARM_TARGET_POSITION.WIDE));
-		DriverController.x.whenPressed(new Infeed_MoveInfeedArmsToPresetPosition(INFEED_ARM_TARGET_POSITION.STORE));
-		DriverController.y.whenPressed(new Infeed_ZeroInfeedArms());
-		DriverController.lb.whenPressed(new Infeed_RunInfeedWheels(INFEED_WHEELS_FUNCTION.SpinCW));
-		DriverController.rb.whenPressed(new Infeed_RunInfeedWheels(INFEED_WHEELS_FUNCTION.SpinCCW));
-		DriverController.lt.whenPressed(new CG_InfeedCube());
-		DriverController.rt.whenPressed(new CG_OutfeedCube());
-		DriverController.start.whenPressed(new Chassis_ShiftGear());
-		
-		DriverController.lb.whenReleased(new Infeed_RunInfeedWheels(INFEED_WHEELS_FUNCTION.StopWheels));
-		DriverController.rb.whenReleased(new Infeed_RunInfeedWheels(INFEED_WHEELS_FUNCTION.StopWheels));
-		DriverController.lt.whenReleased(new CG_StopInfeeding());
-		DriverController.rt.whenReleased(new CG_StopInfeeding());
-		
-		DriverController.dPad.up.whenPressed(new Carriage_BumpCarriageVBus(CARRIAGE_BUMP_FUNCTION.BumpUp));
-		DriverController.dPad.down.whenPressed(new Carriage_BumpCarriageVBus(CARRIAGE_BUMP_FUNCTION.BumpDown));
-
-		DriverController.leftStick.whileActive(new Chassis_DriveWithControllers(DriverController.leftStick, DriverController.rightStick));
-		DriverController.rightStick.whileActive(new Chassis_DriveWithControllers(DriverController.leftStick, DriverController.rightStick));
- 
-		DriverController.leftStick.whenReleased(new Chassis_DriveWithControllers(DriverController.leftStick, DriverController.rightStick));
-		DriverController.rightStick.whenReleased(new Chassis_DriveWithControllers(DriverController.leftStick, DriverController.rightStick));
 
 		// =========== Operator ======================================
 		OperatorController = new BeakXboxController(RobotMap.OPERATOR_GAMEPAD_USB_PORT);
 		//==========================================================
 		System.out.println("Creating Gamepad");
 		// Operator Controller -> Command Mapping
-		OperatorController.a.whenPressed(new Elevator_MoveElevatorToPresetPosition(ELEVATOR_TARGET_POSITION.INFEED_HEIGHT));
-		OperatorController.y.whenPressed(new Elevator_MoveElevatorToPresetPosition(ELEVATOR_TARGET_POSITION.SCALE_HEIGHT));
-		OperatorController.b.whenPressed(new Elevator_BumpElevatorPosition(ELEVATOR_BUMP_FUNCTION.BumpUp));
-		OperatorController.x.whenPressed(new Elevator_BumpElevatorPosition(ELEVATOR_BUMP_FUNCTION.BumpDown));
-		OperatorController.back.whenPressed(new Elevator_MoveElevatorToPresetPosition(ELEVATOR_TARGET_POSITION.CLIMB_HEIGHT));
-		OperatorController.rb.whenPressed(new Elevator_MoveElevatorToPresetPosition(ELEVATOR_TARGET_POSITION.SWITCH_HEIGHT));
-		OperatorController.lb.whenPressed(new CG_ClimbPosition());
-		OperatorController.lt.whenPressed(new Carriage_ToggleSqueezeSolenoid(CARRIAGE_SQUEEZE_FUNCTIONS.Squeeze));
-		OperatorController.rt.whenPressed(new Carriage_ToggleSqueezeSolenoid(CARRIAGE_SQUEEZE_FUNCTIONS.Wide));
-		OperatorController.start.whenPressed(new ToggleActiveCamera());
-
-		OperatorController.leftStick.whenActive(new Carriage_ToggleFlapSolenoid(OperatorController.leftStick));
 	}
 		
 	public double getOperator_Climber_JoystickCmd() {

@@ -5,12 +5,8 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.Date;
 
-
-import org.usfirst.frc.team4028.robot.commands.Auton_CG_BaseLine;
-import org.usfirst.frc.team4028.robot.commands.Auton_CG_ChassisTune;
-import org.usfirst.frc.team4028.robot.commands.Auton_CG_Switch;
-import org.usfirst.frc.team4028.robot.commands.Auton_DoNothing;
-import org.usfirst.frc.team4028.robot.commands.Auton_CG_PIDTune;
+import org.usfirst.frc.team4028.robot.commands.auton.Auton_CG_ChassisTune;
+import org.usfirst.frc.team4028.robot.commands.auton.Auton_DoNothing;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -68,15 +64,6 @@ public class Dashboard {
 	private Dashboard() {
 		_autonModeChooser.addDefault("Do Nothing", AUTON_MODE.DO_NOTHING);
 		_autonModeChooser.addObject("Auto Run", AUTON_MODE.AUTO_RUN);
-		_autonModeChooser.addObject("Switch", AUTON_MODE.SWITCH);
-		_autonModeChooser.addObject("Double Switch", AUTON_MODE.DOUBLE_SWITCH);
-		_autonModeChooser.addObject("Scale", AUTON_MODE.SCALE);
-		_autonModeChooser.addObject("Scale Outside", AUTON_MODE.SCALE_OUTSIDE);
-		_autonModeChooser.addObject("Double Scale", AUTON_MODE.DOUBLE_SCALE);
-		_autonModeChooser.addObject("Scale then Switch", AUTON_MODE.SCALE_THEN_SWITCH);
-		_autonModeChooser.addObject("Double Scale Then Switch", AUTON_MODE.DOUBLE_SCALE_THEN_SWITCH);
-		_autonModeChooser.addObject("#EasyMoney8SecondTripleScale", AUTON_MODE.TRIPLE_SCALE);
-		_autonModeChooser.addObject("Triple Scale SAME SIDE ONLY", AUTON_MODE.TRIPLE_SCALE_SAME_SIDE);
 		_autonModeChooser.addObject("DO NOT SELECT", AUTON_MODE.TEST_AUTON);
 		_autonModeChooser.addObject("Tune Chassis", AUTON_MODE.AUTO_TUNE);
 		SmartDashboard.putData("AUTON MODE: ", _autonModeChooser);
@@ -119,77 +106,8 @@ public class Dashboard {
 		switch(_autonModeChooser.getSelected()) {
 			case DO_NOTHING:
 				return new Auton_DoNothing();
-			case AUTO_RUN:
-				return new Auton_CG_BaseLine();
-			case SWITCH:
-				return new Auton_CG_Switch(_isSwitchLeft);
 			case AUTO_TUNE:
-			return new Auton_CG_ChassisTune();
-			/*case DOUBLE_SWITCH:
-				return new DoubleSwitch(_isSwitchLeft);
-			case SCALE:
-				return new Scale(_isScaleLeft, _isStartingLeft);
-			case SCALE_OUTSIDE:
-				if (_isScaleLeft == _isStartingLeft) {
-					return new ScaleOutside(_isStartingLeft);
-				} else if (_isSwitchLeft == _isStartingLeft) {
-					return new ToSwitchThenBackCenter(_isStartingLeft);
-				} else {
-					return new ToBackCenter(_isStartingLeft);
-				}
-			case DOUBLE_SCALE:
-				return new DoubleScale(_isScaleLeft, _isStartingLeft);
-			case SCALE_THEN_SWITCH:
-				if(_isScaleLeft == _isSwitchLeft) {
-					return new ScaleThenSwitchSameSide(_isScaleLeft);
-				} else if (!_isScaleLeft && _isSwitchLeft){
-					return new CloseSwitchFarScale();
-				} else {
-					return new FarSwitchCloseScale();
-				}
-			case DOUBLE_SCALE_THEN_SWITCH:
-				if (_isStartingLeft) {
-					if (_isScaleLeft && _isSwitchLeft) {
-						return new DoubleScaleAndSwitch(_isScaleLeft);
-					} else if (!_isScaleLeft && !_isSwitchLeft) {
-						return new ScaleThenSwitchSameSide(_isScaleLeft);
-					} else if (_isScaleLeft && !_isSwitchLeft){
-						return new FarSwitchCloseScale();
-					} else {
-						return new CloseSwitchFarScale();
-					}
-				} else {
-					if (!_isScaleLeft && !_isSwitchLeft) {
-						return new DoubleScaleAndSwitch(_isScaleLeft);
-					} else if (_isScaleLeft && _isSwitchLeft) {
-						return new ScaleThenSwitchSameSide(_isScaleLeft);
-					} else {
-						return new FarSwitchCloseScale();
-					}
-				}
-				
-			case TRIPLE_SCALE:
-				if (_isStartingLeft == _isScaleLeft) {
-					return new TripleScale(_isStartingLeft);
-				} else {
-					return new DoubleScale(_isScaleLeft, _isStartingLeft);
-				}
-				
-			case TRIPLE_SCALE_SAME_SIDE:
-				if (_isScaleLeft == _isStartingLeft) {
-					return new TripleScale(_isStartingLeft);
-				} else if (_isSwitchLeft == _isStartingLeft) {
-					return new ToSwitchThenBackCenter(_isStartingLeft);
-				} else {
-					return new ToBackCenter(_isStartingLeft);
-				}
-				
-			case EXPERIMENTAL:
-				return new CloseSwitchFarScale();
-				
-			case TEST_AUTON:
-				return new TestAuton();
-				*/
+				return new Auton_CG_ChassisTune();
 			default:
 				return new Auton_DoNothing(); 
 		}

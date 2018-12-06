@@ -17,15 +17,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.util.Date;
 
-import org.usfirst.frc.team4028.robot.auton.pathfollowing.Paths;
-import org.usfirst.frc.team4028.robot.commands.Elevator_ZeroElevator;
-import org.usfirst.frc.team4028.robot.commands.Infeed_ZeroInfeedArms;
+import org.usfirst.frc.team4028.robot.auton.Paths;
 import org.usfirst.frc.team4028.robot.sensors.SwitchableCameraServer;
-import org.usfirst.frc.team4028.robot.subsystems.Carriage;
 import org.usfirst.frc.team4028.robot.subsystems.Chassis;
-import org.usfirst.frc.team4028.robot.subsystems.Climber;
-import org.usfirst.frc.team4028.robot.subsystems.Elevator;
-import org.usfirst.frc.team4028.robot.subsystems.Infeed;
 import org.usfirst.frc.team4028.robot.util.GeneralUtilities;
 import org.usfirst.frc.team4028.robot.util.LogDataBE;
 import org.usfirst.frc.team4028.robot.util.MovingAverage;
@@ -42,11 +36,7 @@ public class Robot extends TimedRobot
 	// create instance of singelton Subsystems
 	private Dashboard _dashboard = Dashboard.getInstance();
 	
-	private Carriage _carriage = Carriage.getInstance();
 	private Chassis _chassis = Chassis.getInstance();
-	private Climber _climber = Climber.getInstance();
-	private Elevator _elevator = Elevator.getInstance();
-	private Infeed _infeed = Infeed.getInstance();
 	private OI _oi = OI.getInstance();
 	private SwitchableCameraServer _camera = SwitchableCameraServer.getInstance();
 
@@ -96,7 +86,7 @@ public class Robot extends TimedRobot
 		_dashboard.getSelectedAuton().start();
 		Scheduler.getInstance().run();
 
-		_chassis.recordAutonStartTime();
+
 		_chassis.zeroSensors();
 		_chassis.setHighGear(true);
 
@@ -112,14 +102,7 @@ public class Robot extends TimedRobot
 		if (retries == 0) {
 			DriverStation.reportError("Failed To Receive Game Data", false);
 		}
-		if (!_infeed.get_hasArmsBeenZeroed()) {
-			Command reZeroInfeedArmsCommand = new Infeed_ZeroInfeedArms();
-			reZeroInfeedArmsCommand.start();
-		}
-		if (!_elevator.get_hasElevatorBeenZeroed()) {
-			Command reZeroElevatorCommand = new Elevator_ZeroElevator();
-			reZeroElevatorCommand.start();
-		}
+
 		_lastDashboardWriteTimeMSec = new Date().getTime(); // snapshot time to control spamming
 		_dataLogger = GeneralUtilities.setupLogging("Auton"); // init data logging	
 		_dashboard.outputToDashboard();
@@ -152,17 +135,6 @@ public class Robot extends TimedRobot
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
-
-
-		
-		if (!_infeed.get_hasArmsBeenZeroed()) {
-			Command reZeroInfeedArmsCommand = new Infeed_ZeroInfeedArms();
-			reZeroInfeedArmsCommand.start();
-		}
-		if (!_elevator.get_hasElevatorBeenZeroed()) {
-			Command reZeroElevatorCommand = new Elevator_ZeroElevator();
-			reZeroElevatorCommand.start();
-		}
 		_chassis.stop();
 		_lastDashboardWriteTimeMSec = new Date().getTime(); // snapshot time to control spamming
 		_dataLogger = GeneralUtilities.setupLogging("Teleop"); // init data logging
@@ -201,10 +173,7 @@ public class Robot extends TimedRobot
     		// to push its data out to the dashboard
 
     		_chassis.updateDashboard(); 
-    		_elevator.updateDashboard();
-    		_infeed.updateDashboard();
-    		_carriage.updateDashboard();
-	    	_climber.updateDashboard();
+
 	    	
     		// write the overall robot dashboard info
 	    	SmartDashboard.putString("Robot Build", _buildMsg);
@@ -229,10 +198,7 @@ public class Robot extends TimedRobot
 	    	
 	    	// ask each subsystem that exists to add its data
 	    	_chassis.updateLogData(logData);
-	    	_elevator.updateLogData(logData);
-	    	_infeed.updateLogData(logData);
-	    	_carriage.updateLogData(logData);
-			_climber.updateLogData(logData);
+
 			
 	    	_dataLogger.WriteDataLine(logData);
     	}

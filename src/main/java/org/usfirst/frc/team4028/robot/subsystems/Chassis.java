@@ -3,13 +3,13 @@ package org.usfirst.frc.team4028.robot.subsystems;
 //#region  == Define Imports ==
 import org.usfirst.frc.team4028.robot.Constants;
 import org.usfirst.frc.team4028.robot.RobotMap;
-import org.usfirst.frc.team4028.robot.auton.pathfollowing.RobotState;
-import org.usfirst.frc.team4028.robot.auton.pathfollowing.control.Path;
-import org.usfirst.frc.team4028.robot.auton.pathfollowing.control.PathFollower;
-import org.usfirst.frc.team4028.robot.auton.pathfollowing.motion.RigidTransform;
-import org.usfirst.frc.team4028.robot.auton.pathfollowing.motion.Rotation;
-import org.usfirst.frc.team4028.robot.auton.pathfollowing.motion.Twist;
-import org.usfirst.frc.team4028.robot.auton.pathfollowing.util.Kinematics;
+import org.usfirst.frc.team4028.robot.auton.RobotState;
+import org.usfirst.frc.team4028.robot.auton.control.Path;
+import org.usfirst.frc.team4028.robot.auton.control.PathFollower;
+import org.usfirst.frc.team4028.robot.auton.motion.RigidTransform;
+import org.usfirst.frc.team4028.robot.auton.motion.Rotation;
+import org.usfirst.frc.team4028.robot.auton.motion.Twist;
+import org.usfirst.frc.team4028.robot.auton.util.Kinematics;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -65,7 +65,7 @@ public class Chassis extends Subsystem
 		FOLLOW_PATH,
 		DRIVE_SET_DISTANCE
 	}
-	
+	/*
 	private static final double[] MOTION_MAGIC_TURN_PIDF_GAINS = {0.25, 0.0, 30.0, 0.095};
 	private static final double[] MOTION_MAGIC_STRAIGHT_PIDF_GAINS = {0.15, 0.0, 20.0, 0.095};
 	private static final double[] LOW_GEAR_VELOCITY_PIDF_GAINS = {0.15, 0.0, 1.5, 0.085}; 
@@ -73,7 +73,7 @@ public class Chassis extends Subsystem
     
     private static final int[] MOTION_MAGIC_TURN_VEL_ACC = {80 * 150, 170 * 150};
 	private static final int[] MOTION_MAGIC_STRAIGHT_VEL_ACC = {80 * 150, 170 * 150};
-	
+	*/
 	ChassisState _chassisState = ChassisState.UNKNOWN;
 	Path _currentPath;
 	PathFollower _pathFollower;
@@ -125,24 +125,24 @@ public class Chassis extends Subsystem
 				return;
 				
 			case AUTO_TURN:
-				GeneralUtilities.setPIDFGains(_leftMaster, MOTION_MAGIC_TURN_PIDF_GAINS);
-				GeneralUtilities.setPIDFGains(_rightMaster, MOTION_MAGIC_TURN_PIDF_GAINS);
+				//GeneralUtilities.setPIDFGains(_leftMaster, MOTION_MAGIC_TURN_PIDF_GAINS);
+				//GeneralUtilities.setPIDFGains(_rightMaster, MOTION_MAGIC_TURN_PIDF_GAINS);
 				moveToTargetAngle();
 				return;
 				
 			case DRIVE_SET_DISTANCE:
-				GeneralUtilities.setPIDFGains(_leftMaster, MOTION_MAGIC_STRAIGHT_PIDF_GAINS);
-				GeneralUtilities.setPIDFGains(_rightMaster, MOTION_MAGIC_STRAIGHT_PIDF_GAINS);
+				//GeneralUtilities.setPIDFGains(_leftMaster, MOTION_MAGIC_STRAIGHT_PIDF_GAINS);
+				//GeneralUtilities.setPIDFGains(_rightMaster, MOTION_MAGIC_STRAIGHT_PIDF_GAINS);
 				moveToTargetPosDriveSetDistance();
 				return;
 				
 			case FOLLOW_PATH:
 				if (get_isHighGear()) {
-					GeneralUtilities.setPIDFGains(_leftMaster, HIGH_GEAR_VELOCITY_PIDF_GAINS);
-					GeneralUtilities.setPIDFGains(_rightMaster, HIGH_GEAR_VELOCITY_PIDF_GAINS);
+				//	GeneralUtilities.setPIDFGains(_leftMaster, HIGH_GEAR_VELOCITY_PIDF_GAINS);
+				//	GeneralUtilities.setPIDFGains(_rightMaster, HIGH_GEAR_VELOCITY_PIDF_GAINS);
 				} else {
-					GeneralUtilities.setPIDFGains(_leftMaster, LOW_GEAR_VELOCITY_PIDF_GAINS);
-					GeneralUtilities.setPIDFGains(_rightMaster, LOW_GEAR_VELOCITY_PIDF_GAINS);
+				//	GeneralUtilities.setPIDFGains(_leftMaster, LOW_GEAR_VELOCITY_PIDF_GAINS);
+				//	GeneralUtilities.setPIDFGains(_rightMaster, LOW_GEAR_VELOCITY_PIDF_GAINS);
 				}
 				
 				if (_pathFollower != null) 
@@ -222,14 +222,6 @@ public class Chassis extends Subsystem
 		System.out.println("Target Position: " + _leftMtrDriveSetDistanceCmd);
 		System.out.println("Current Position: " + _leftMaster.getSelectedSensorPosition(0));
 		setHighGear(false);
-
-		_leftMaster.configMotionCruiseVelocity(31256, 10);
-		_leftMaster.configMotionAcceleration(62513, 10);
-		_rightMaster.configMotionCruiseVelocity(31256, 10);
-		_rightMaster.configMotionAcceleration(62513, 10);
-		
-
-
 	}
 
 	public void moveToTargetPosDriveSetDistance ()
@@ -240,7 +232,7 @@ public class Chassis extends Subsystem
 	public void stop()
 	{
 		setLeftRightCommand(ControlMode.PercentOutput, 0, 0);
-		setHighGear(true);
+		setHighGear(false);
 
 	}
 
@@ -300,12 +292,7 @@ public class Chassis extends Subsystem
 		zeroGyro();
 	}
 
-	public double _autonStartTime;
 
-
-	public void recordAutonStartTime(){
-		_autonStartTime = Timer.getFPGATimestamp();
-	}
 
 	public synchronized void setWantDrivePath(Path path, boolean reversed) {
         if (_currentPath != path || _chassisState != ChassisState.FOLLOW_PATH) {
