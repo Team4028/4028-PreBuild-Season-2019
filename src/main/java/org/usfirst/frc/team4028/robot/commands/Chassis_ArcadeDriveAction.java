@@ -10,7 +10,7 @@ public class Chassis_ArcadeDriveAction extends Command
     private Chassis _chassis = Chassis.getInstance();
     double _waitTime;
     double _throttle;
-    double _turn = 0; //Intitialized to 0 so that if constructor has no turn it will turn
+    double _turn = 0; //Intitialized to 0 so that if constructor has no turn it will not turn
     double _startTime; 
 
 

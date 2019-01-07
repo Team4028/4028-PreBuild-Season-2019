@@ -17,6 +17,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.util.Date;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+
 import org.usfirst.frc.team4028.robot.auton.Paths;
 import org.usfirst.frc.team4028.robot.sensors.SwitchableCameraServer;
 import org.usfirst.frc.team4028.robot.subsystems.Chassis;
@@ -83,25 +85,25 @@ public class Robot extends TimedRobot
 	@Override
 	public void autonomousInit() {
 		_chassis.stop();
-		_dashboard.getSelectedAuton().start();
+		//_dashboard.getSelectedAuton().start();
 		Scheduler.getInstance().run();
 
 
 		_chassis.zeroSensors();
 		_chassis.setHighGear(true);
 
-		int retries = 100;
+		// int retries = 100;
 		
-		while(!_dashboard.isGameDataReceived() && retries > 0) {
-			retries--;
-			try { 
-				Thread.sleep(5);
-			} catch (InterruptedException ie) {}
-		}
+		// while(!_dashboard.isGameDataReceived() && retries > 0) {
+		// 	retries--;
+		// 	try { 
+		// 		Thread.sleep(5);
+		// 	} catch (InterruptedException ie) {}
+		// }
 		
-		if (retries == 0) {
-			DriverStation.reportError("Failed To Receive Game Data", false);
-		}
+		// if (retries == 0) {
+		// 	DriverStation.reportError("Failed To Receive Game Data", false);
+		// }
 
 		_lastDashboardWriteTimeMSec = new Date().getTime(); // snapshot time to control spamming
 		_dataLogger = GeneralUtilities.setupLogging("Auton"); // init data logging	
@@ -115,15 +117,17 @@ public class Robot extends TimedRobot
 	public void autonomousPeriodic() 
 	{
 		Scheduler.getInstance().run();
-		_chassis.updateChassis(Timer.getFPGATimestamp());
-		// System.out.println(_chassis.isDoneWithPath());
+
+		_chassis.setLeftRightCommand(ControlMode.PercentOutput, 1, 1);
+		// _chassis.updateChassis(Timer.getFPGATimestamp());
+		// // System.out.println(_chassis.isDoneWithPath());
 		
-		// ============= Refresh Dashboard =============
-		_dashboard.outputToDashboard();
-		outputAllToDashboard();
+		// // ============= Refresh Dashboard =============
+		// _dashboard.outputToDashboard();
+		// outputAllToDashboard();
 		
-		// ============= Optionally Log Data =============
-		logAllData();
+		// // ============= Optionally Log Data =============
+		// logAllData();
 	}
 
 	/**

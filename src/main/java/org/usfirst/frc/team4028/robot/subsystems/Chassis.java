@@ -43,13 +43,13 @@ public class Chassis extends Subsystem
 	
 	private NavXGyro _navX = NavXGyro.getInstance();
 	
-	public static final double ENCODER_COUNTS_PER_WHEEL_REV = 30725.425;		// account for gear boxes
+	public static final double ENCODER_COUNTS_PER_WHEEL_REV = 1097;		// account for gear boxes
 
 	public double _leftMtrDriveSetDistanceCmd;
 	public double _rightMtrDriveSetDistanceCmd;
 	private double _targetAngle, _angleError;
 	private boolean _isTurnRight;
-	private static final double ENCODER_ROTATIONS_PER_DEGREE = 46.15/3600;
+	private static final double ENCODER_ROTATIONS_PER_DEGREE = ENCODER_COUNTS_PER_WHEEL_REV/360;
 	private RobotState _robotState = RobotState.getInstance();
 	private double _leftMasterVelocityLoggingLastLogTime;
 	private double _leftMasterVelocityLoggingThisTime;
@@ -400,7 +400,7 @@ public class Chassis extends Subsystem
 	//=====================================================================================
 	// Private Helper methods below
 	//=====================================================================================
-	private void setLeftRightCommand(ControlMode mode, double leftCommand, double rightCommand) {
+	public void setLeftRightCommand(ControlMode mode, double leftCommand, double rightCommand) {
 		_leftMaster.set(mode, leftCommand);
 		_rightMaster.set(mode, rightCommand);
 	}
