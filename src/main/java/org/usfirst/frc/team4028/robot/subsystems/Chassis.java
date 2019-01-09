@@ -50,7 +50,7 @@ public class Chassis extends Subsystem
 	public double _rightMtrDriveSetDistanceCmd;
 	private double _targetAngle, _angleError;
 	private boolean _isTurnRight;
-	private static final double ENCODER_ROTATIONS_PER_DEGREE = ENCODER_COUNTS_PER_WHEEL_REV/360;
+	private static final double ENCODER_ROTATIONS_PER_DEGREE = 97.598; //ENCODER_COUNTS_PER_WHEEL_REV/360;
 	private RobotState _robotState = RobotState.getInstance();
 	private double _leftMasterVelocityLoggingLastLogTime;
 	private double _leftMasterVelocityLoggingThisTime;
@@ -135,6 +135,7 @@ public class Chassis extends Subsystem
 				//GeneralUtilities.setPIDFGains(_leftMaster, MOTION_MAGIC_TURN_PIDF_GAINS);
 				//GeneralUtilities.setPIDFGains(_rightMaster, MOTION_MAGIC_TURN_PIDF_GAINS);
 				moveToTargetAngle();
+				setHighGear(false);
 				return;
 				
 			case DRIVE_SET_DISTANCE:
@@ -279,7 +280,7 @@ public class Chassis extends Subsystem
 			_angleError = _targetAngle - _navX.getYaw() - 360;
 		}			
 		
-		double encoderError = ENCODER_ROTATIONS_PER_DEGREE * _angleError *ENCODER_COUNTS_PER_WHEEL_REV;		
+		double encoderError = ENCODER_ROTATIONS_PER_DEGREE * _angleError;		
 		double leftDriveTargetPos = get_leftPos() + encoderError;
 		double rightDriveTargetPos = get_rightPos() - encoderError;
 		

@@ -120,7 +120,6 @@ public class Robot extends TimedRobot
 		// this line or comment it out.
 		_chassis.stop();
 		_chassis.zeroSensors();
-		_chassis.setHighGear(true);
 		_lastDashboardWriteTimeMSec = new Date().getTime(); // snapshot time to control spamming
 		_dataLogger = GeneralUtilities.setupLogging("Teleop"); // init data logging
 		_lastDashboardWriteTimeMSec = new Date().getTime(); // snapshot time to control spamming
