@@ -12,7 +12,7 @@ public class Auton_ParallelStarter extends Command
     }
     @Override
     protected boolean isFinished() {
-        //System.out.println("Parallel Starter Has Finished");
+        System.out.println("Parallel Starter Has Finished");
         return true;
     }
 

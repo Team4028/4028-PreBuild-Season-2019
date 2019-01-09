@@ -15,6 +15,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.VelocityMeasPeriod;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -43,7 +44,7 @@ public class Chassis extends Subsystem
 	
 	private NavXGyro _navX = NavXGyro.getInstance();
 	
-	public static final double ENCODER_COUNTS_PER_WHEEL_REV = 1097;		// account for gear boxes
+	public static final double ENCODER_COUNTS_PER_WHEEL_REV = 4539.5; //1097		// account for gear boxes
 
 	public double _leftMtrDriveSetDistanceCmd;
 	public double _rightMtrDriveSetDistanceCmd;
@@ -65,10 +66,10 @@ public class Chassis extends Subsystem
 		FOLLOW_PATH,
 		DRIVE_SET_DISTANCE
 	}
-	/*
-	private static final double[] MOTION_MAGIC_TURN_PIDF_GAINS = {0.25, 0.0, 30.0, 0.095};
-	private static final double[] MOTION_MAGIC_STRAIGHT_PIDF_GAINS = {0.15, 0.0, 20.0, 0.095};
-	private static final double[] LOW_GEAR_VELOCITY_PIDF_GAINS = {0.15, 0.0, 1.5, 0.085}; 
+	
+	private static final double[] MOTION_MAGIC_TURN_PIDF_GAINS = {0.5, 0.0, 0.0, 0.419};
+	private static final double[] MOTION_MAGIC_STRAIGHT_PIDF_GAINS = {4.0, 0.0, 95.0, 0.52};
+	/*private static final double[] LOW_GEAR_VELOCITY_PIDF_GAINS = {0.15, 0.0, 1.5, 0.085}; 
 	private static final double[] HIGH_GEAR_VELOCITY_PIDF_GAINS = {0.09, 0.0, 1.3, 0.044}; 
     
     private static final int[] MOTION_MAGIC_TURN_VEL_ACC = {80 * 150, 170 * 150};
@@ -110,7 +111,13 @@ public class Chassis extends Subsystem
         configDriveMotors(_leftMaster);
         configDriveMotors(_rightMaster);
         configDriveMotors(_leftSlave);
-        configDriveMotors(_rightSlave);
+		configDriveMotors(_rightSlave);
+		
+		_leftMaster.setNeutralMode(NeutralMode.Brake);
+		_leftSlave.setNeutralMode(NeutralMode.Brake);
+		_rightMaster.setNeutralMode(NeutralMode.Brake);
+		_rightSlave.setNeutralMode(NeutralMode.Brake);
+
 
 		_shifter = new DoubleSolenoid(RobotMap.PCM_CAN_ADDR, RobotMap.SHIFTER_EXTEND_PCM_PORT, RobotMap.SHIFTER_RETRACT_PCM_PORT);
 	
@@ -131,8 +138,12 @@ public class Chassis extends Subsystem
 				return;
 				
 			case DRIVE_SET_DISTANCE:
-				//GeneralUtilities.setPIDFGains(_leftMaster, MOTION_MAGIC_STRAIGHT_PIDF_GAINS);
-				//GeneralUtilities.setPIDFGains(_rightMaster, MOTION_MAGIC_STRAIGHT_PIDF_GAINS);
+				GeneralUtilities.setPIDFGains(_leftMaster, MOTION_MAGIC_STRAIGHT_PIDF_GAINS);
+				GeneralUtilities.setPIDFGains(_rightMaster, MOTION_MAGIC_STRAIGHT_PIDF_GAINS);
+				_leftMaster.configMotionCruiseVelocity(2100, 10);
+				_leftMaster.configMotionAcceleration(16800, 10);
+				_rightMaster.configMotionCruiseVelocity(2100, 10);
+				_rightMaster.configMotionAcceleration(16800, 10);
 				moveToTargetPosDriveSetDistance();
 				return;
 				

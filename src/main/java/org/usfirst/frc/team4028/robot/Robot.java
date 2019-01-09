@@ -11,16 +11,12 @@ import edu.wpi.first.wpilibj.DriverStation;
 // #region Import Statements
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.util.Date;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-
 import org.usfirst.frc.team4028.robot.auton.Paths;
-import org.usfirst.frc.team4028.robot.sensors.SwitchableCameraServer;
 import org.usfirst.frc.team4028.robot.subsystems.Chassis;
 import org.usfirst.frc.team4028.robot.util.GeneralUtilities;
 import org.usfirst.frc.team4028.robot.util.LogDataBE;
@@ -40,7 +36,7 @@ public class Robot extends TimedRobot
 	
 	private Chassis _chassis = Chassis.getInstance();
 	private OI _oi = OI.getInstance();
-	private SwitchableCameraServer _camera = SwitchableCameraServer.getInstance();
+	//private SwitchableCameraServer _camera = SwitchableCameraServer.getInstance();
 
 	
 	// class level working variables
@@ -85,25 +81,9 @@ public class Robot extends TimedRobot
 	@Override
 	public void autonomousInit() {
 		_chassis.stop();
-		//_dashboard.getSelectedAuton().start();
+		_dashboard.getSelectedAuton().start();
 		Scheduler.getInstance().run();
-
-
-		_chassis.zeroSensors();
 		_chassis.setHighGear(true);
-
-		// int retries = 100;
-		
-		// while(!_dashboard.isGameDataReceived() && retries > 0) {
-		// 	retries--;
-		// 	try { 
-		// 		Thread.sleep(5);
-		// 	} catch (InterruptedException ie) {}
-		// }
-		
-		// if (retries == 0) {
-		// 	DriverStation.reportError("Failed To Receive Game Data", false);
-		// }
 
 		_lastDashboardWriteTimeMSec = new Date().getTime(); // snapshot time to control spamming
 		_dataLogger = GeneralUtilities.setupLogging("Auton"); // init data logging	
@@ -117,17 +97,16 @@ public class Robot extends TimedRobot
 	public void autonomousPeriodic() 
 	{
 		Scheduler.getInstance().run();
-
-		_chassis.setLeftRightCommand(ControlMode.PercentOutput, 1, 1);
-		// _chassis.updateChassis(Timer.getFPGATimestamp());
-		// // System.out.println(_chassis.isDoneWithPath());
 		
-		// // ============= Refresh Dashboard =============
-		// _dashboard.outputToDashboard();
-		// outputAllToDashboard();
+		_chassis.updateChassis(Timer.getFPGATimestamp());
+		// System.out.println(_chassis.isDoneWithPath());
 		
-		// // ============= Optionally Log Data =============
-		// logAllData();
+		// ============= Refresh Dashboard =============
+		_dashboard.outputToDashboard();
+		outputAllToDashboard();
+		
+		// ============= Optionally Log Data =============
+		logAllData();
 	}
 
 	/**
@@ -140,6 +119,8 @@ public class Robot extends TimedRobot
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
 		_chassis.stop();
+		_chassis.zeroSensors();
+		_chassis.setHighGear(true);
 		_lastDashboardWriteTimeMSec = new Date().getTime(); // snapshot time to control spamming
 		_dataLogger = GeneralUtilities.setupLogging("Teleop"); // init data logging
 		_lastDashboardWriteTimeMSec = new Date().getTime(); // snapshot time to control spamming
@@ -151,6 +132,7 @@ public class Robot extends TimedRobot
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
+		
 		// ============= Refresh Dashboard =============
 		outputAllToDashboard();
 		_dashboard.outputToDashboard();

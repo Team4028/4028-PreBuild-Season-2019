@@ -1,10 +1,8 @@
 package org.usfirst.frc.team4028.robot;
 
 // #region
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.util.Date;
 
+import org.usfirst.frc.team4028.robot.commands.auton.Auton_CG_AutoRun;
 import org.usfirst.frc.team4028.robot.commands.auton.Auton_CG_ChassisTune;
 import org.usfirst.frc.team4028.robot.commands.auton.Auton_DoNothing;
 
@@ -108,6 +106,8 @@ public class Dashboard {
 				return new Auton_DoNothing();
 			case AUTO_TUNE:
 				return new Auton_CG_ChassisTune();
+			case AUTO_RUN:
+				return new Auton_CG_AutoRun();
 			default:
 				return new Auton_DoNothing(); 
 		}

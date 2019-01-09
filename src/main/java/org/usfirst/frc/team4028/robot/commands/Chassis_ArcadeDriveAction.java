@@ -36,8 +36,17 @@ public class Chassis_ArcadeDriveAction extends Command
     protected void execute() {
         if ((Timer.getFPGATimestamp() - _startTime) > _waitTime) {
 			_chassis.stop();
-		} else {
-			_chassis.arcadeDrive(-_throttle, _turn);
+        } 
+        else 
+        {
+             if(Math.max(Math.abs(_throttle), Math.abs(_turn)) <= .05)
+            {
+                _chassis.arcadeDrive(-_throttle, _turn);
+            }
+            else
+            {
+                _chassis.stop();
+            }
 		}
     }
 
