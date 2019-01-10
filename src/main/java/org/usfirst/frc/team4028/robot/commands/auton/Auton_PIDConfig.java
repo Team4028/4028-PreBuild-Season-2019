@@ -51,7 +51,8 @@ public Auton_PIDConfig(Subsystem requiredSubsystem, TalonSRX talon, int srxParam
 }
 
 public Auton_PIDConfig(Subsystem requiredSubsystem, TalonSRX talon, int srxParameterSlot, double desiredVelocity,
-        int numSamplesRequired, boolean isF, TalonSRX[] slaveTalons) {
+        int numSamplesRequired, boolean isF, TalonSRX[] slaveTalons) 
+{
     this._fQ = isF;
     this._talon = talon;
     this._samplesRequired = numSamplesRequired;
@@ -66,23 +67,26 @@ public Auton_PIDConfig(Subsystem requiredSubsystem, TalonSRX talon, int srxParam
 }
 
 // Called just before this Command runs the first time
-protected void initialize() {
+protected void initialize() 
+{
     System.out.println("Gathering Data...");
 }
 
 // Called repeatedly when this Command is scheduled to run
-protected void execute() {
+protected void execute() 
+{
     double outputSignal = _talon.getMotorOutputVoltage() / _talon.getBusVoltage();
 
     double closedLoopError = Math.PI;
 
-    if (_fQ){
+    if (_fQ)
+    {
         double speed = _talon.getSelectedSensorVelocity(_paramterSlot);
         cBuffSpeed.addLast(speed);
-    } else {
-
+    }
+    else
+    {
         cBuffError.addLast(Math.abs((double)_talon.getClosedLoopError(_paramterSlot)));
-    
     }
 
     _samplesGathered++;
@@ -96,26 +100,33 @@ protected void execute() {
     */
     
 
-    if (_samplesGathered % 10 == 0) {
+    if (_samplesGathered % 10 == 0) 
+    {
          System.out.println("Closed loop error: " + _talon.getClosedLoopError(_paramterSlot));
-     }
+    }
 }
 
 // Make this return true when this Command no longer needs to run execute()
-protected boolean isFinished() {
+protected boolean isFinished() 
+{
     return _samplesGathered >= _samplesRequired;
 }
 
 // Called once after isFinished returns true
-protected void end() {
-    if (_fQ){
+protected void end() 
+{
+    if (_fQ)
+    {
         double kF =  1023/ meanComputer.mean(cBuffSpeed.toArray());
         _talon.config_kF(_paramterSlot, kF, 10);
         System.out.println("Calculated F gain = " + kF);
-        for (TalonSRX slave : _slavesList){
+        for (TalonSRX slave : _slavesList)
+        {
             slave.config_kF(_paramterSlot, kF, 10);
         }
-    } else {
+    } 
+    else 
+    {
         double kP = .1*1023/meanComputer.mean(cBuffError.toArray());
         _talon.config_kP(_paramterSlot, kP, 10);
         System.out.println("Calculated P Gain = " + kP);

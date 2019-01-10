@@ -7,7 +7,8 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class Auton_CG_AutoRun extends CommandGroup {
 
-  public Auton_CG_AutoRun(){
+  public Auton_CG_AutoRun()
+  {
     //addParallel(new Auton_ParallelStarter());
     addSequential(new Chassis_DriveSetDistanceAction(60));
     System.out.println("finish drivesetdistance");

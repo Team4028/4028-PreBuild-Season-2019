@@ -10,6 +10,7 @@ public class Auton_TurnAction extends Command
 
     private double _targetAngle;
     private boolean _isTurnRight;
+    private double _initialSign;
 
     public Auton_TurnAction(double angle, boolean isTurnRight)
     {
@@ -17,25 +18,30 @@ public class Auton_TurnAction extends Command
         _isTurnRight = isTurnRight;
     }
     @Override
-    public void initialize()
+    protected void initialize()
     {
         _chassis.setTargetAngleAndTurnDirection(_targetAngle, _isTurnRight);
+        //_initialSign = (_chassis.get_Heading() - _targetAngle)/Math.abs(_chassis.get_Heading() - _targetAngle);
     }
 
     @Override
-    public void execute() {}
+    protected void execute() 
+    {
+        _chassis.moveToTargetAngle();
+    }
     
     @Override
-    public boolean isFinished() 
+    protected boolean isFinished() 
+    { 
+        //return !(_initialSign == (_chassis.get_Heading() - _targetAngle)/Math.abs(_chassis.get_Heading() - _targetAngle));
+		return Math.abs(_targetAngle - _chassis.get_Heading()) < 2.5; // Returns true when chassis is within angle
+                                                                     // deadband
+    
+    }
+    @Override
+    protected void end()
     {
-        if(_targetAngle==180||_targetAngle==-180)
-		{
-			return _chassis.get_Heading() > 178 || _chassis.get_Heading() < -178;
-		}
-		else
-		{
-			return Math.abs(_targetAngle - _chassis.get_Heading()) < 2.5; // Returns true when chassis is within angle
-                                                                          // deadband
-		}
+        _chassis.stop();
+        //_targetAngle = _chassis.get_Heading();
     }
 }

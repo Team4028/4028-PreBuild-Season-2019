@@ -50,7 +50,7 @@ public class Chassis extends Subsystem
 	public double _rightMtrDriveSetDistanceCmd;
 	private double _targetAngle, _angleError;
 	private boolean _isTurnRight;
-	private static final double ENCODER_ROTATIONS_PER_DEGREE = 97.598; //ENCODER_COUNTS_PER_WHEEL_REV/360;
+	private static final double ENCODER_ROTATIONS_PER_DEGREE = 97.598; //ENCODER_COUNTS_PER_WHEEL_REV/360;//97.598; //
 	private RobotState _robotState = RobotState.getInstance();
 	private double _leftMasterVelocityLoggingLastLogTime;
 	private double _leftMasterVelocityLoggingThisTime;
@@ -67,7 +67,7 @@ public class Chassis extends Subsystem
 		DRIVE_SET_DISTANCE
 	}
 	
-	private static final double[] MOTION_MAGIC_TURN_PIDF_GAINS = {0.5, 0.0, 0.0, 0.419};
+	private static final double[] MOTION_MAGIC_TURN_PIDF_GAINS = {1.6, 0.0, 16.0, 0.419};
 	private static final double[] MOTION_MAGIC_STRAIGHT_PIDF_GAINS = {4.0, 0.0, 95.0, 0.52};
 	/*private static final double[] LOW_GEAR_VELOCITY_PIDF_GAINS = {0.15, 0.0, 1.5, 0.085}; 
 	private static final double[] HIGH_GEAR_VELOCITY_PIDF_GAINS = {0.09, 0.0, 1.3, 0.044}; 
@@ -132,9 +132,13 @@ public class Chassis extends Subsystem
 				return;
 				
 			case AUTO_TURN:
-				//GeneralUtilities.setPIDFGains(_leftMaster, MOTION_MAGIC_TURN_PIDF_GAINS);
-				//GeneralUtilities.setPIDFGains(_rightMaster, MOTION_MAGIC_TURN_PIDF_GAINS);
-				moveToTargetAngle();
+				GeneralUtilities.setPIDFGains(_leftMaster, MOTION_MAGIC_TURN_PIDF_GAINS);
+				GeneralUtilities.setPIDFGains(_rightMaster, MOTION_MAGIC_TURN_PIDF_GAINS);
+				_leftMaster.configMotionCruiseVelocity(1680, 10);
+				_leftMaster.configMotionAcceleration(8400, 10);
+				_rightMaster.configMotionCruiseVelocity(1680, 10);
+				_rightMaster.configMotionAcceleration(8400, 10);
+				//moveToTargetAngle();
 				setHighGear(false);
 				return;
 				
@@ -243,6 +247,7 @@ public class Chassis extends Subsystem
 	
 	public void stop()
 	{
+		_chassisState=ChassisState.PERCENT_VBUS;
 		setLeftRightCommand(ControlMode.PercentOutput, 0, 0);
 		setHighGear(false);
 
@@ -259,9 +264,10 @@ public class Chassis extends Subsystem
 		_chassisState = ChassisState.AUTO_TURN;
 	}
 
-	private void moveToTargetAngle() {
+	public void moveToTargetAngle() 
+	{
 		// TODO: This code needs to be simplified. Should convert angles to vectors and use dot product to get angle difference.
-		if((_navX.getYaw() >= 0 && _targetAngle >= 0 && _isTurnRight && _navX.getYaw() > _targetAngle) ||
+		/*if((_navX.getYaw() >= 0 && _targetAngle >= 0 && _isTurnRight && _navX.getYaw() > _targetAngle) ||
 			(_navX.getYaw() >= 0 && _targetAngle < 0 && _isTurnRight) ||
 			(_navX.getYaw() < 0 && _targetAngle < 0 && _isTurnRight && Math.abs(_navX.getYaw()) < Math.abs(_targetAngle))) {
 			_angleError = 360 - _navX.getYaw() + _targetAngle;
@@ -271,18 +277,33 @@ public class Chassis extends Subsystem
 				(_navX.getYaw() >= 0 && _targetAngle < 0 && !_isTurnRight) ||
 				(_navX.getYaw() < 0 && _targetAngle >= 0 && _isTurnRight) ||
 				(_navX.getYaw() < 0 && _targetAngle < 0 && _isTurnRight && Math.abs(_navX.getYaw()) > Math.abs(_targetAngle)) ||
-				(_navX.getYaw() < 0 && _targetAngle < 0 && !_isTurnRight && Math.abs(_navX.getYaw()) < Math.abs(_targetAngle))) {
+				(_navX.getYaw() < 0 && _targetAngle < 0 && !_isTurnRight && Math.abs(_navX.getYaw()) < Math.abs(_targetAngle))) 
+		{
 			_angleError = _targetAngle - _navX.getYaw();
 		}		
 		else if((_navX.getYaw() >= 0 && _targetAngle >= 0 && !_isTurnRight && _navX.getYaw() < _targetAngle)||
 				(_navX.getYaw() < 0 && _targetAngle < 0 && !_isTurnRight && Math.abs(_navX.getYaw()) > Math.abs(_targetAngle))||
 				(_navX.getYaw() < 0 && _targetAngle >= 0 && !_isTurnRight)) {
 			_angleError = _targetAngle - _navX.getYaw() - 360;
-		}			
-		
+		}*/
+		if((!_isTurnRight && get_Heading() > _targetAngle) || (_isTurnRight && get_Heading() < _targetAngle))
+		{
+			_angleError = _targetAngle - get_Heading();
+		} 			
+		else if(!_isTurnRight && get_Heading() < _targetAngle)
+		{
+			_angleError = _targetAngle - get_Heading() - 360;
+		}
+		else if(_isTurnRight && get_Heading() > _targetAngle)
+		{
+			_angleError = 360 - get_Heading() + _targetAngle;
+		}
+
 		double encoderError = ENCODER_ROTATIONS_PER_DEGREE * _angleError;		
 		double leftDriveTargetPos = get_leftPos() + encoderError;
 		double rightDriveTargetPos = get_rightPos() - encoderError;
+		SmartDashboard.putNumber("Yaw", get_Heading());
+		SmartDashboard.putNumber("Error", rightDriveTargetPos/ENCODER_COUNTS_PER_WHEEL_REV);
 		
 		setLeftRightCommand(ControlMode.MotionMagic, leftDriveTargetPos, rightDriveTargetPos);
 	}
@@ -405,8 +426,16 @@ public class Chassis extends Subsystem
 		return _rightMaster.getSelectedSensorPosition(0);
 	}
 	
-	public double get_Heading() {
-		return _navX.getYaw();
+	public double get_Heading() 
+	{
+		if(_navX.getYaw()>=0)
+		{
+			return _navX.getYaw();
+		}
+		else
+		{
+			return 360+_navX.getYaw();
+		}
 	}
 
 	//=====================================================================================

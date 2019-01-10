@@ -3,8 +3,10 @@ package org.usfirst.frc.team4028.robot;
 // #region
 
 import org.usfirst.frc.team4028.robot.commands.auton.Auton_CG_AutoRun;
+import org.usfirst.frc.team4028.robot.commands.auton.Auton_CG_AutoTurn;
 import org.usfirst.frc.team4028.robot.commands.auton.Auton_CG_ChassisTune;
 import org.usfirst.frc.team4028.robot.commands.auton.Auton_DoNothing;
+import org.usfirst.frc.team4028.robot.subsystems.Chassis;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -26,6 +28,7 @@ public class Dashboard {
 		UNDEFINED,
 		DO_NOTHING,
 		AUTO_RUN,
+		AUTO_TURN,
 		SWITCH,
 		DOUBLE_SWITCH,
 		SCALE,
@@ -62,6 +65,7 @@ public class Dashboard {
 	private Dashboard() {
 		_autonModeChooser.addDefault("Do Nothing", AUTON_MODE.DO_NOTHING);
 		_autonModeChooser.addObject("Auto Run", AUTON_MODE.AUTO_RUN);
+		_autonModeChooser.addObject("Auto Turn", AUTON_MODE.AUTO_TURN);
 		_autonModeChooser.addObject("DO NOT SELECT", AUTON_MODE.TEST_AUTON);
 		_autonModeChooser.addObject("Tune Chassis", AUTON_MODE.AUTO_TUNE);
 		SmartDashboard.putData("AUTON MODE: ", _autonModeChooser);
@@ -108,6 +112,8 @@ public class Dashboard {
 				return new Auton_CG_ChassisTune();
 			case AUTO_RUN:
 				return new Auton_CG_AutoRun();
+			case AUTO_TURN:
+				return new Auton_CG_AutoTurn();
 			default:
 				return new Auton_DoNothing(); 
 		}
@@ -116,6 +122,7 @@ public class Dashboard {
 	
 	public void outputToDashboard() {
 		SmartDashboard.putString("AUTON SELECTED", _autonModeChooser.getSelected().toString());
-		// 	    	SmartDashboard.putString("FMS Debug Msg", _fmsDebugMsg);
+		SmartDashboard.putNumber("Angle", Chassis.getInstance().get_Heading());		
+		//SmartDashboard.putString("FMS Debug Msg", _fmsDebugMsg);
 	}
 }

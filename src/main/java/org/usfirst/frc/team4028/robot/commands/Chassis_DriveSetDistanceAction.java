@@ -52,7 +52,8 @@ public class Chassis_DriveSetDistanceAction extends Command
 	}
 
 	@Override
-	protected void end(){
+	protected void end()
+	{
 		_chassis.stop();
 	}
 

@@ -81,6 +81,7 @@ public class Robot extends TimedRobot
 	@Override
 	public void autonomousInit() {
 		_chassis.stop();
+		_chassis.zeroSensors();
 		_dashboard.getSelectedAuton().start();
 		Scheduler.getInstance().run();
 		_chassis.setHighGear(true);
@@ -120,6 +121,7 @@ public class Robot extends TimedRobot
 		// this line or comment it out.
 		_chassis.stop();
 		_chassis.zeroSensors();
+		_chassis.setHighGear(false);
 		_lastDashboardWriteTimeMSec = new Date().getTime(); // snapshot time to control spamming
 		_dataLogger = GeneralUtilities.setupLogging("Teleop"); // init data logging
 		_lastDashboardWriteTimeMSec = new Date().getTime(); // snapshot time to control spamming

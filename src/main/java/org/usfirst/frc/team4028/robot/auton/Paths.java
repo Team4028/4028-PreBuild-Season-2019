@@ -17,11 +17,13 @@ public class Paths {
 	private static Hashtable<Left, Path> leftPaths = new Hashtable<Left, Path>();
 	private static Hashtable<Right, Path> rightPaths = new Hashtable<Right, Path>();
 	
-	public enum Center {
+	public enum Center 
+	{
 		AUTO_RUN,
-
+		AUTO_TURN,
 	}
 public static Path autoRunPath;
+public static Path autoTurnPath;
 	
 	public enum Left {
 		
@@ -56,7 +58,6 @@ public static Path autoRunPath;
 	{
 		autoRunPath = buildPathFromWaypoints(getStraightPathWaypoints(new Translation(20, 46), 0, 120));
 		centerPaths.put(Center.AUTO_RUN, autoRunPath);
-		
 	}
 	
 	private static void buildLeftPaths() {
