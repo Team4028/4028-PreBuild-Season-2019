@@ -24,8 +24,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  *  We write values to
  *		- provide real-time info to the drive team
  */
-public class Dashboard {
-	private enum AUTON_MODE {
+public class Dashboard 
+{
+	private enum AUTON_MODE 
+	{
 		UNDEFINED,
 		DO_NOTHING,
 		AUTO_RUN,
@@ -43,7 +45,8 @@ public class Dashboard {
 		AUTO_TUNE,
 		TEST_AUTON
 	}
-	private enum STARTING_SIDE {
+	private enum STARTING_SIDE 
+	{
 		LEFT,
 		RIGHT
 	}
@@ -58,12 +61,14 @@ public class Dashboard {
 	//=====================================================================================
 	private static Dashboard _instance = new Dashboard();
 	
-	public static Dashboard getInstance() {
+	public static Dashboard getInstance() 
+	{
 		return _instance;
 	}
 	
 	// private constructor for singleton pattern
-	private Dashboard() {
+	private Dashboard() 
+	{
 		_autonModeChooser.addDefault("Do Nothing", AUTON_MODE.DO_NOTHING);
 		_autonModeChooser.addObject("Auto Run", AUTON_MODE.AUTO_RUN);
 		_autonModeChooser.addObject("Auto Turn", AUTON_MODE.AUTO_TURN);
@@ -77,7 +82,8 @@ public class Dashboard {
 		SmartDashboard.putData("AUTON STARTING SIDE: ", _autonStartingSideChooser);
 	}
 	
-	public boolean isGameDataReceived() {
+	public boolean isGameDataReceived() 
+	{
 		String gameData = DriverStation.getInstance().getGameSpecificMessage();
 		//String gameData = "LLL";
 		
@@ -91,35 +97,39 @@ public class Dashboard {
 		}
 	}
 	
-	public boolean isBlueAlliance() {
+	public boolean isBlueAlliance() 
+	{
 		return DriverStation.getInstance().getAlliance() == Alliance.Blue;
 	}
 	
 	/** This prints once during robotInit */
-	public void printStartupMessage() {
+	public void printStartupMessage() 
+	{
 		boolean isFMSAttached = DriverStation.getInstance().isFMSAttached();
 		
 		DriverStation.reportWarning(">>>>> Is FMS Attached : [" + isFMSAttached + "] <<<<<<", false);
 	}
 	
 	/** Returns the autonBase object associated with the auton selected on the dashboard */
-	public CommandGroup getSelectedAuton() {
+	public CommandGroup getSelectedAuton() 
+	{
 		//return new Auton_CG_BaseLine();
 		_isStartingLeft = (_autonStartingSideChooser.getSelected() == STARTING_SIDE.LEFT);
 		
-		switch(_autonModeChooser.getSelected()) {
+		switch(_autonModeChooser.getSelected()) 
+		{
 			case DO_NOTHING:
 				return new Auton_DoNothing();
 			case AUTO_TUNE:
 				return new Auton_CG_ChassisTune();
 			case AUTO_RUN:
 				return new Auton_CG_AutoRun();
+			case TEST_AUTON:
+				return new Auton_CG_TestPath();
 			case AUTO_TURN:
 				return new Auton_CG_AutoTurn();
 			default:
 				return new Auton_DoNothing(); 
-			case TEST_AUTON:
-				return new Auton_CG_TestPath();
 		}
 		//return null;
 	}

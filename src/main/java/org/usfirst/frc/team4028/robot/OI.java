@@ -65,6 +65,8 @@ public class OI {
 		// Driver Controller -> Driver Mapping
 		DriverController.leftStick.whileHeld(new Chassis_DriveWithControllers(DriverController.leftStick, DriverController.rightStick));
 		DriverController.rightStick.whileHeld(new Chassis_DriveWithControllers(DriverController.leftStick, DriverController.rightStick));
+		DriverController.leftStick.whenReleased(new Chassis_DriveWithControllers(DriverController.leftStick, DriverController.rightStick));
+		DriverController.rightStick.whenReleased(new Chassis_DriveWithControllers(DriverController.leftStick, DriverController.rightStick));
 		// =========== Operator ======================================
 		OperatorController = new BeakXboxController(RobotMap.OPERATOR_GAMEPAD_USB_PORT);
 		//==========================================================

@@ -69,8 +69,8 @@ public class Chassis extends Subsystem
 	
 	private static final double[] MOTION_MAGIC_TURN_PIDF_GAINS = {1.6, 0.0, 16.0, 0.419};
 	private static final double[] MOTION_MAGIC_STRAIGHT_PIDF_GAINS = {4.0, 0.0, 95.0, 0.52};
-	private static final double[] LOW_GEAR_VELOCITY_PIDF_GAINS = {0.15, 0.0, 1.5, 0.085}; 
-	private static final double[] HIGH_GEAR_VELOCITY_PIDF_GAINS = {0.09, 0.0, 1.3, 0.044}; 
+	private static final double[] LOW_GEAR_VELOCITY_PIDF_GAINS = {0.06, 0.0, 0.6, 0.355}; 
+	private static final double[] HIGH_GEAR_VELOCITY_PIDF_GAINS = {0.18, 0.0, 2.7, 0.154}; 
     
 	// private static final int[] MOTION_MAGIC_TURN_VEL_ACC = {80 * 150, 170 * 150};
 	//private static final int[] MOTION_MAGIC_STRAIGHT_VEL_ACC = {80 * 150, 170 * 150};
@@ -91,7 +91,8 @@ public class Chassis extends Subsystem
 	}
 	
 	// private constructor for singleton pattern
-	private Chassis() {
+	private Chassis() 
+	{
 		_leftMaster = new TalonSRX(RobotMap.LEFT_DRIVE_MASTER_CAN_ADDR);
 		_leftSlave = new TalonSRX(RobotMap.LEFT_DRIVE_SLAVE_CAN_ADDR);
 		_rightMaster = new TalonSRX(RobotMap.RIGHT_DRIVE_MASTER_CAN_ADDR);
@@ -124,10 +125,12 @@ public class Chassis extends Subsystem
 	}
 
 
-	public void updateChassis(double timestamp){
-		switch(_chassisState) {
+	public void updateChassis(double timestamp)
+	{
+		switch(_chassisState) 
+		{
 			case UNKNOWN:
-			return;
+				return;
 			case PERCENT_VBUS:
 				return;
 				
@@ -153,10 +156,13 @@ public class Chassis extends Subsystem
 				return;
 				
 			case FOLLOW_PATH:
-				if (get_isHighGear()) {
+				if (get_isHighGear()) 
+				{
 					GeneralUtilities.setPIDFGains(_leftMaster, HIGH_GEAR_VELOCITY_PIDF_GAINS);
 					GeneralUtilities.setPIDFGains(_rightMaster, HIGH_GEAR_VELOCITY_PIDF_GAINS);
-				} else {
+				} 
+				else 
+				{
 					GeneralUtilities.setPIDFGains(_leftMaster, LOW_GEAR_VELOCITY_PIDF_GAINS);
 					GeneralUtilities.setPIDFGains(_rightMaster, LOW_GEAR_VELOCITY_PIDF_GAINS);
 				}
@@ -183,24 +189,28 @@ public class Chassis extends Subsystem
 		else if ((Math.abs(get_leftVelocityInchesPerSec() - get_rightVelocityInchesPerSec())) < 5.0) {
 			setLeftRightCommand(ControlMode.PercentOutput, throttle + 0.7 * turn, throttle - 0.7 * turn);
 		} 
-		else {
+		else 
+		{
 			setLeftRightCommand(ControlMode.PercentOutput, throttle + 0.5 * turn, throttle - 0.5 * turn);
 		} 
 	}
 	
 	/* ===== SHIFTER ===== */
-    public synchronized void toggleShifter() {
+	public synchronized void toggleShifter() 
+	{
     	setHighGear(!get_isHighGear());	// Inverse of current solenoid state
     }
 	
-	public synchronized void setHighGear(boolean isHighGear) {
+	public synchronized void setHighGear(boolean isHighGear) 
+	{
 		if (isHighGear) 
 			_shifter.set(Constants.SHIFTER_HIGH_GEAR_POS);
 		else 
 			_shifter.set(Constants.SHIFTER_LOW_GEAR_POS);
 	}
 	
-	private void configMasterMotors(TalonSRX talon) {
+	private void configMasterMotors(TalonSRX talon) 
+	{
 		talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
 		talon.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 5, 0);
 	
@@ -211,7 +221,8 @@ public class Chassis extends Subsystem
 		talon.configClosedloopRamp(0.0, 0);
 	}
 	
-	private void configDriveMotors(TalonSRX talon) {
+	private void configDriveMotors(TalonSRX talon) 
+	{
 		talon.configForwardLimitSwitchSource(LimitSwitchSource.Deactivated, LimitSwitchNormal.Disabled, 0);
 		talon.configReverseLimitSwitchSource(LimitSwitchSource.Deactivated, LimitSwitchNormal.Disabled, 0);
         
@@ -237,7 +248,7 @@ public class Chassis extends Subsystem
 
 		System.out.println("Target Position: " + _leftMtrDriveSetDistanceCmd);
 		System.out.println("Current Position: " + _leftMaster.getSelectedSensorPosition(0));
-		setHighGear(false);
+		setHighGear(true);
 	}
 
 	public void moveToTargetPosDriveSetDistance ()
@@ -249,7 +260,7 @@ public class Chassis extends Subsystem
 	{
 		_chassisState=ChassisState.PERCENT_VBUS;
 		setLeftRightCommand(ControlMode.PercentOutput, 0, 0);
-		setHighGear(false);
+		setHighGear(true);
 
 	}
 
@@ -257,7 +268,8 @@ public class Chassis extends Subsystem
 	//AUTOTURN
 	//==================================================================================
 
-	public synchronized void setTargetAngleAndTurnDirection(double targetAngle, boolean isTurnRight) {
+	public synchronized void setTargetAngleAndTurnDirection(double targetAngle, boolean isTurnRight) 
+	{
 		_targetAngle = targetAngle;
 		_isTurnRight = isTurnRight;
 		setHighGear(false);
@@ -311,40 +323,49 @@ public class Chassis extends Subsystem
 	// PATH FOLLOWING
 	//===================================================================================
 
-	public void zeroEncoders(){
+	public void zeroEncoders()
+	{
 		_leftMaster.getSensorCollection().setQuadraturePosition(0, 10);
 		_rightMaster.getSensorCollection().setQuadraturePosition(0, 10);
 	}
 
-	public void zeroGyro(){
+	public void zeroGyro()
+	{
 		_navX.zeroYaw();
 	}
 
-	public void zeroSensors(){
+	public void zeroSensors()
+	{
 		zeroEncoders();
 		zeroGyro();
 	}
 
 
 
-	public synchronized void setWantDrivePath(Path path, boolean reversed) {
-        if (_currentPath != path || _chassisState != ChassisState.FOLLOW_PATH) {
+	public synchronized void setWantDrivePath(Path path, boolean reversed) 
+	{
+		if (_currentPath != path || _chassisState != ChassisState.FOLLOW_PATH) 
+		{
 			_leftEncoderPrevDistance = get_leftPos()/ENCODER_COUNTS_PER_WHEEL_REV * Constants.DRIVE_WHEEL_DIAMETER_IN * Math.PI;
 	        _rightEncoderPrevDistance = get_leftPos()/ENCODER_COUNTS_PER_WHEEL_REV * Constants.DRIVE_WHEEL_DIAMETER_IN * Math.PI;
             RobotState.getInstance().resetDistanceDriven();
             _pathFollower = new PathFollower(path, reversed, path.maxAccel, path.maxDecel, path.inertiaSteeringGain);
             _chassisState = ChassisState.FOLLOW_PATH;
             _currentPath = path;
-        } else {
+		} 
+		else 
+		{
         	setLeftRightCommand(ControlMode.Velocity, 0.0, 0.0);
         }
     }
 
-	public void updatePathFollower(double timestamp) {
+	public void updatePathFollower(double timestamp) 
+	{
 		estimateRobotState(timestamp);
 		RigidTransform _robotPose = RobotState.getInstance().getLatestFieldToVehicle().getValue();
 		Twist command = _pathFollower.update(timestamp, _robotPose, RobotState.getInstance().getDistanceDriven(), RobotState.getInstance().getPredictedVelocity().dx);
-		if (!_pathFollower.isFinished()) {
+		if (!_pathFollower.isFinished()) 
+		{
 			Kinematics.DriveVelocity setpoint = Kinematics.inverseKinematics(command);
 			final double maxDesired = Math.max(Math.abs(setpoint.left), Math.abs(setpoint.right));
             final double scale = maxDesired > Constants.DRIVE_VELOCITY_MAX_SETPOINT ? Constants.DRIVE_VELOCITY_MAX_SETPOINT / maxDesired : 1.0;
@@ -352,7 +373,9 @@ public class Chassis extends Subsystem
             _centerTargetVelocity = command.dx;
 			_leftTargetVelocity = setpoint.left;
 			_rightTargetVelocity = setpoint.right;
-		} else {
+		} 
+		else 
+		{
 			setLeftRightCommand(ControlMode.Velocity, 0.0, 0.0);
 		}
 	}
@@ -529,17 +552,15 @@ public class Chassis extends Subsystem
 	public void updateLogData(LogDataBE logData) 
 	{
 		logData.AddData("Left Actual Velocity [in/s]", String.valueOf(GeneralUtilities.roundDouble(get_leftVelocityInchesPerSec(), 2)));
-		System.out.println("Left Actual Velocity" + Double.toString(get_leftVelocityInchesPerSec()));
-		//logData.AddData("Left Target Velocity [in/s]", String.valueOf(GeneralUtilities.roundDouble(_leftTargetVelocity, 2)));
-		logData.AddData("Left Output Current", String.valueOf(GeneralUtilities.roundDouble(_leftMaster.getOutputCurrent(), 2)));
-		System.out.println("Left Target" + Double.toString( _leftTargetVelocity));
+		logData.AddData("Left Target Velocity [in/s]", String.valueOf(GeneralUtilities.roundDouble(_leftTargetVelocity, 2)));
+		//logData.AddData("Left Output Current", String.valueOf(GeneralUtilities.roundDouble(_leftMaster.getOutputCurrent(), 2)));
+	
 
 		logData.AddData("Right Actual Velocity [in/s]", String.valueOf(GeneralUtilities.roundDouble(-get_rightVelocityInchesPerSec(), 2)));
-		System.out.println("Right Actual Velocity [in/s]" + Double.toString(-get_rightVelocityInchesPerSec()));
-		//logData.AddData("Right Target Velocity [in/s]", String.valueOf(GeneralUtilities.roundDouble(_rightTargetVelocity, 2)));
-		logData.AddData("Right Output Current", String.valueOf(GeneralUtilities.roundDouble(_rightMaster.getOutputCurrent(), 2)));
-		logData.AddData("Chassis Acceleration [in/s/s]", String.valueOf(GeneralUtilities.roundDouble(getAcceleration(), 2)));
-		System.out.println("Right Target" + Double.toString(_rightTargetVelocity));
+		logData.AddData("Right Target Velocity [in/s]", String.valueOf(GeneralUtilities.roundDouble(_rightTargetVelocity, 2)));
+		//logData.AddData("Right Output Current", String.valueOf(GeneralUtilities.roundDouble(_rightMaster.getOutputCurrent(), 2)));
+		//logData.AddData("Chassis Acceleration [in/s/s]", String.valueOf(GeneralUtilities.roundDouble(getAcceleration(), 2)));
+	
 		//logData.AddData("Pose X", String.valueOf(RobotState.getInstance().getLatestFieldToVehicle().getValue().getTranslation().x()));
 		//logData.AddData("Pose Y", String.valueOf(RobotState.getInstance().getLatestFieldToVehicle().getValue().getTranslation().y()));
 		//logData.AddData("Pose Angle", String.valueOf(RobotState.getInstance().getLatestFieldToVehicle().getValue().getRotation().getDegrees()));

@@ -68,8 +68,8 @@ public static Path testPath;
 	));*/
 		Path testPath = buildPathFromWaypoints(0, Arrays.asList(
 			new Waypoint(100,100,0,0),
-			new Waypoint(150,100,50,40),
-			new Waypoint(180,150,0,40)));
+			new Waypoint(200,100,50,100),
+			new Waypoint(260,200,0,100)));
 		centerPaths.put(Center.TEST, testPath);
 	}
 	
