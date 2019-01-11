@@ -69,12 +69,12 @@ public class Chassis extends Subsystem
 	
 	private static final double[] MOTION_MAGIC_TURN_PIDF_GAINS = {1.6, 0.0, 16.0, 0.419};
 	private static final double[] MOTION_MAGIC_STRAIGHT_PIDF_GAINS = {4.0, 0.0, 95.0, 0.52};
-	/*private static final double[] LOW_GEAR_VELOCITY_PIDF_GAINS = {0.15, 0.0, 1.5, 0.085}; 
+	private static final double[] LOW_GEAR_VELOCITY_PIDF_GAINS = {0.15, 0.0, 1.5, 0.085}; 
 	private static final double[] HIGH_GEAR_VELOCITY_PIDF_GAINS = {0.09, 0.0, 1.3, 0.044}; 
     
-    private static final int[] MOTION_MAGIC_TURN_VEL_ACC = {80 * 150, 170 * 150};
-	private static final int[] MOTION_MAGIC_STRAIGHT_VEL_ACC = {80 * 150, 170 * 150};
-	*/
+	// private static final int[] MOTION_MAGIC_TURN_VEL_ACC = {80 * 150, 170 * 150};
+	//private static final int[] MOTION_MAGIC_STRAIGHT_VEL_ACC = {80 * 150, 170 * 150};
+	
 	ChassisState _chassisState = ChassisState.UNKNOWN;
 	Path _currentPath;
 	PathFollower _pathFollower;
@@ -154,11 +154,11 @@ public class Chassis extends Subsystem
 				
 			case FOLLOW_PATH:
 				if (get_isHighGear()) {
-				//	GeneralUtilities.setPIDFGains(_leftMaster, HIGH_GEAR_VELOCITY_PIDF_GAINS);
-				//	GeneralUtilities.setPIDFGains(_rightMaster, HIGH_GEAR_VELOCITY_PIDF_GAINS);
+					GeneralUtilities.setPIDFGains(_leftMaster, HIGH_GEAR_VELOCITY_PIDF_GAINS);
+					GeneralUtilities.setPIDFGains(_rightMaster, HIGH_GEAR_VELOCITY_PIDF_GAINS);
 				} else {
-				//	GeneralUtilities.setPIDFGains(_leftMaster, LOW_GEAR_VELOCITY_PIDF_GAINS);
-				//	GeneralUtilities.setPIDFGains(_rightMaster, LOW_GEAR_VELOCITY_PIDF_GAINS);
+					GeneralUtilities.setPIDFGains(_leftMaster, LOW_GEAR_VELOCITY_PIDF_GAINS);
+					GeneralUtilities.setPIDFGains(_rightMaster, LOW_GEAR_VELOCITY_PIDF_GAINS);
 				}
 				
 				if (_pathFollower != null) 
@@ -413,7 +413,7 @@ public class Chassis extends Subsystem
 	}
 	
 
-	private synchronized boolean get_isHighGear() {
+	public synchronized boolean get_isHighGear() {
 		return _shifter.get() == Constants.SHIFTER_HIGH_GEAR_POS;
 	}
 
@@ -518,16 +518,28 @@ public class Chassis extends Subsystem
 	//=====================================================================================
 	// Support Methods
 	//=====================================================================================
+
+	public void printVelocityDiagnosticData(){
+		System.out.println("Left Actual Velocity: " + Double.toString(get_leftVelocityInchesPerSec()));
+		System.out.println("Left Target: " + Double.toString( _leftTargetVelocity));
+		System.out.println("Right Actual Velocity [in/s]: " + Double.toString(-get_rightVelocityInchesPerSec()));
+		System.out.println("Right Target Velocity: " + Double.toString(_rightTargetVelocity));
+
+	}
 	public void updateLogData(LogDataBE logData) 
 	{
 		logData.AddData("Left Actual Velocity [in/s]", String.valueOf(GeneralUtilities.roundDouble(get_leftVelocityInchesPerSec(), 2)));
+		System.out.println("Left Actual Velocity" + Double.toString(get_leftVelocityInchesPerSec()));
 		//logData.AddData("Left Target Velocity [in/s]", String.valueOf(GeneralUtilities.roundDouble(_leftTargetVelocity, 2)));
 		logData.AddData("Left Output Current", String.valueOf(GeneralUtilities.roundDouble(_leftMaster.getOutputCurrent(), 2)));
-		
+		System.out.println("Left Target" + Double.toString( _leftTargetVelocity));
+
 		logData.AddData("Right Actual Velocity [in/s]", String.valueOf(GeneralUtilities.roundDouble(-get_rightVelocityInchesPerSec(), 2)));
+		System.out.println("Right Actual Velocity [in/s]" + Double.toString(-get_rightVelocityInchesPerSec()));
 		//logData.AddData("Right Target Velocity [in/s]", String.valueOf(GeneralUtilities.roundDouble(_rightTargetVelocity, 2)));
 		logData.AddData("Right Output Current", String.valueOf(GeneralUtilities.roundDouble(_rightMaster.getOutputCurrent(), 2)));
 		logData.AddData("Chassis Acceleration [in/s/s]", String.valueOf(GeneralUtilities.roundDouble(getAcceleration(), 2)));
+		System.out.println("Right Target" + Double.toString(_rightTargetVelocity));
 		//logData.AddData("Pose X", String.valueOf(RobotState.getInstance().getLatestFieldToVehicle().getValue().getTranslation().x()));
 		//logData.AddData("Pose Y", String.valueOf(RobotState.getInstance().getLatestFieldToVehicle().getValue().getTranslation().y()));
 		//logData.AddData("Pose Angle", String.valueOf(RobotState.getInstance().getLatestFieldToVehicle().getValue().getRotation().getDegrees()));

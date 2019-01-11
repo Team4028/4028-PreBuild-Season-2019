@@ -21,9 +21,11 @@ public class Paths {
 	{
 		AUTO_RUN,
 		AUTO_TURN,
+		TEST
 	}
 public static Path autoRunPath;
 public static Path autoTurnPath;
+public static Path testPath;
 	
 	public enum Left {
 		
@@ -56,8 +58,19 @@ public static Path autoTurnPath;
 	
 	private static void buildCenterPaths() 
 	{
-		autoRunPath = buildPathFromWaypoints(getStraightPathWaypoints(new Translation(20, 46), 0, 120));
+		autoRunPath = buildPathFromWaypoints(getStraightPathWaypoints(new Translation(20, 46), 0, 60));
 		centerPaths.put(Center.AUTO_RUN, autoRunPath);
+		/*Path autoRunPath = buildPathFromWaypoints(0, Arrays.asList(
+		new Waypoint(100,125,0,0),
+		new Waypoint(140,60,40,20),
+		new Waypoint(170,264,30,30),
+		new Waypoint(225,264,0,40)
+	));*/
+		Path testPath = buildPathFromWaypoints(0, Arrays.asList(
+			new Waypoint(100,100,0,0),
+			new Waypoint(150,100,50,40),
+			new Waypoint(180,150,0,40)));
+		centerPaths.put(Center.TEST, testPath);
 	}
 	
 	private static void buildLeftPaths() {

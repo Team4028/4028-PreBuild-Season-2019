@@ -98,6 +98,8 @@ public class Robot extends TimedRobot
 	public void autonomousPeriodic() 
 	{
 		Scheduler.getInstance().run();
+		System.out.println(_chassis.get_isHighGear());
+		_chassis.printVelocityDiagnosticData();
 		
 		_chassis.updateChassis(Timer.getFPGATimestamp());
 		// System.out.println(_chassis.isDoneWithPath());

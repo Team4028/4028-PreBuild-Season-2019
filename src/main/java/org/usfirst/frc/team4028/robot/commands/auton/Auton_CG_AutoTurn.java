@@ -10,7 +10,7 @@ public class Auton_CG_AutoTurn extends CommandGroup
     private NavXGyro _navX = NavXGyro.getInstance();
     public Auton_CG_AutoTurn()
     {
-        addSequential(new Auton_TurnAction(90, false));
+        addSequential(new Auton_TurnAction(90, true));
     }
 
 }

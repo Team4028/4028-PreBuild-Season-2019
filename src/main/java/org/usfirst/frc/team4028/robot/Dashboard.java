@@ -5,6 +5,7 @@ package org.usfirst.frc.team4028.robot;
 import org.usfirst.frc.team4028.robot.commands.auton.Auton_CG_AutoRun;
 import org.usfirst.frc.team4028.robot.commands.auton.Auton_CG_AutoTurn;
 import org.usfirst.frc.team4028.robot.commands.auton.Auton_CG_ChassisTune;
+import org.usfirst.frc.team4028.robot.commands.auton.Auton_CG_TestPath;
 import org.usfirst.frc.team4028.robot.commands.auton.Auton_DoNothing;
 import org.usfirst.frc.team4028.robot.subsystems.Chassis;
 
@@ -69,6 +70,7 @@ public class Dashboard {
 		_autonModeChooser.addObject("DO NOT SELECT", AUTON_MODE.TEST_AUTON);
 		_autonModeChooser.addObject("Tune Chassis", AUTON_MODE.AUTO_TUNE);
 		SmartDashboard.putData("AUTON MODE: ", _autonModeChooser);
+		_autonModeChooser.addObject("Test", AUTON_MODE.TEST_AUTON);
 		
 		_autonStartingSideChooser.addDefault("LEFT", STARTING_SIDE.LEFT);
 		_autonStartingSideChooser.addObject("RIGHT", STARTING_SIDE.RIGHT);
@@ -116,6 +118,8 @@ public class Dashboard {
 				return new Auton_CG_AutoTurn();
 			default:
 				return new Auton_DoNothing(); 
+			case TEST_AUTON:
+				return new Auton_CG_TestPath();
 		}
 		//return null;
 	}
