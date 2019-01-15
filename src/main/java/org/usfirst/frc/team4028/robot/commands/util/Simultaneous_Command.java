@@ -6,7 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /* Allows for multiple actions to run in parallel */
-public class Simultaneous_Command extends Command{
+public class Simultaneous_Command extends Command
+{
 	private ArrayList<Command> _commandList;
 	private int _commandsNum;
 	private int count = 0;

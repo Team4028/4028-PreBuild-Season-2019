@@ -15,7 +15,8 @@ public class Chassis_ArcadeDriveAction extends Command
 
 
 
-    public Chassis_ArcadeDriveAction(double throttle, double waitTime){
+    public Chassis_ArcadeDriveAction(double throttle, double waitTime)
+    {
     _throttle = throttle;
     _waitTime = waitTime;
     }
@@ -29,25 +30,12 @@ public class Chassis_ArcadeDriveAction extends Command
 
     protected void initialize() {    	
         _startTime = Timer.getFPGATimestamp();
-		_chassis.setHighGear(false);
+		_chassis.setHighGear(true);
     }
 
     
     protected void execute() {
-        if ((Timer.getFPGATimestamp() - _startTime) > _waitTime) {
-			_chassis.stop();
-        } 
-        else 
-        {
-             if(Math.max(Math.abs(_throttle), Math.abs(_turn)) <= .05)
-            {
-                _chassis.arcadeDrive(-_throttle, _turn);
-            }
-            else
-            {
-                _chassis.stop();
-            }
-		}
+        _chassis.arcadeDrive(_throttle, _turn);
     }
 
     protected boolean isFinished() {

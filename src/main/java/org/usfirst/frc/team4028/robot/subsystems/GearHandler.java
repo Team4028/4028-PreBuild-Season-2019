@@ -7,6 +7,7 @@ import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import org.omg.CORBA.UNKNOWN;
 import org.usfirst.frc.team4028.robot.Constants;
 import org.usfirst.frc.team4028.robot.RobotMap;
 
@@ -40,11 +41,15 @@ public class GearHandler extends Subsystem {
 	private static final double TILT_PID_P_CONSTANT = 1.6;
 	private static final double TILT_PID_I_CONSTANT = 0.0;
 	private static final double TILT_PID_D_CONSTANT = 50.0;
+	private static final double TILT_PID_F_CONSTANT = 0.2;
 	private static final double TILT_PID_RAMP_RATE = 0.1;
 		
 	private static final double TILT_MAX_V_DOWN_TILT = +3.0; // Down is positive (RIP MAXIMUM...)
 	private static final double TILT_MAX_V_UP_TILT = -6.0;
 	// --------------------------------------------------------
+	private static final double ZERO_POSITION = 0;
+	private static final double SCORE_POSITION = 351;
+	private static final double FLOOR_POSITION = 1700;
 	
 	// --------------------------------------------------------
 	// define Working variables and constants for homing the tilt axix
@@ -71,7 +76,6 @@ public class GearHandler extends Subsystem {
 	
 	private static final double GEAR_MOVE_TO_HOME_VELOCITY_CMD = -0.40;   //set
 	private static final long GEAR_MAXIMUM_MOVE_TO_HOME_TIME_IN_MSEC = 5000;
-	private String _gearTiltState;
 	
 	public static double _targetPos = GEAR_TILT_AXIS_HOME_POSITION_IN_ROTATIONS;
 
@@ -81,6 +85,27 @@ public class GearHandler extends Subsystem {
 	private boolean _isLastTiltMoveToFloorCallComplete;
 
 	// --------------------------------------------------------
+	/*public enum GearTiltState
+	{
+		FLOOR,
+		STORE,
+		SCORE,
+		UNKNOWN
+	}
+
+	GearTiltState _gearTiltState = GearTiltState.UNKNOWN;
+
+	switch (_gearTiltState)
+	{
+		case FLOOR:
+			return;
+		case STORE:
+			return;
+		case SCORE:
+			return;
+		case UNKNOWN:
+			return;
+	}	*/
 	
 	//============================================================================================
 	// constructors follow
@@ -92,13 +117,16 @@ public class GearHandler extends Subsystem {
 		_gearTiltMotor.setNeutralMode(NeutralMode.Coast);							// default to brake mode DISABLED
 		_gearTiltMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,0,10);	// set encoder to be feedback device
 		_gearTiltMotor.setSensorPhase(false);  							// do not invert encoder feedback
-		_gearTiltMotor.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed,10);
+		_gearTiltMotor.configForwardLimitSwitchSource(LimitSwitchSource.Deactivated, LimitSwitchNormal.Disabled,10);
 		_gearTiltMotor.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed, 10);
 		//_gearTiltMotor.ConfigRevLimitSwitchNormallyOpen(false);
 		
 		//_gearTiltMotor.setProfile(TILT_PID_P_PROFILE);
-		_gearTiltMotor.set(ControlMode.MotionMagic,TILT_PID_P_PROFILE);
-		_gearTiltMotor.set(ControlMode.MotionMagic, TILT_PID_I_CONSTANT, TILT_PID_D_CONSTANT);
+		_gearTiltMotor.config_kP(0, TILT_PID_P_CONSTANT, 10);
+		_gearTiltMotor.config_kD(0, TILT_PID_D_CONSTANT, 10);
+		_gearTiltMotor.config_kF(0, TILT_PID_F_CONSTANT, 10);
+		_gearTiltMotor.configMotionCruiseVelocity(1200, 10);
+		_gearTiltMotor.configMotionAcceleration(1200, 10);
 		_gearTiltMotor.configNominalOutputForward(0.0, 10);
 		_gearTiltMotor.configNominalOutputReverse(-0.0, 10);
 		//_gearTiltMotor.configPeakOutputVoltage(TILT_MAX_V_DOWN_TILT, TILT_MAX_V_UP_TILT);
@@ -111,8 +139,8 @@ public class GearHandler extends Subsystem {
 		//_gearInfeedMotor.enableBrakeMode(false);							// default to brake mode DISABLED
 		_gearInfeedMotor.setNeutralMode(NeutralMode.Coast);
 		//_gearInfeedMotor.enableLimitSwitch(false, false);
-		_gearInfeedMotor.overrideLimitSwitchesEnable(false);
-		_gearInfeedMotor.overrideLimitSwitchesEnable(false);		
+		_gearInfeedMotor.configForwardLimitSwitchSource(LimitSwitchSource.Deactivated,LimitSwitchNormal.Disabled,10);
+		_gearInfeedMotor.configReverseLimitSwitchSource(LimitSwitchSource.Deactivated,LimitSwitchNormal.Disabled, 10);		
 		//ZeroGearTiltAxisInit();
 	}
 
@@ -120,8 +148,20 @@ public class GearHandler extends Subsystem {
 	// Methods follow
 	//============================================================================================	
 
-	
+	public double getScorePosition()
+	{
+		return SCORE_POSITION;
+	}
 
+	public double getFloorPosition()
+	{
+		return FLOOR_POSITION;
+	}
+
+	public double getZeroPosition()
+	{
+		return ZERO_POSITION;
+	}
 	
     // public void ZeroGearTiltAxisInit() {
 	// 	_gearTiltMoveLastTargetPosition = GEAR_TILT_MOVE_LAST_TARGET_POSITION.UNDEFINED;   	
@@ -249,7 +289,7 @@ public class GearHandler extends Subsystem {
 	{
 		// invert motor command		=>	* -1.0
 		// limit max speed to 50%	=>  * 0.50
-		_gearInfeedMotor.set(ControlMode.PercentOutput, percentVBusCmd * -1.0 * 0.50);
+		_gearInfeedMotor.set(ControlMode.PercentOutput, percentVBusCmd*.5);
 	}
 	
 	// private  String getTiltPosition() {
@@ -337,6 +377,11 @@ public class GearHandler extends Subsystem {
 		_gearTiltMotor.setSelectedSensorPosition(0, 0, 10);
 	}
 
+	public double getCurrentPosition()
+	{
+		return _gearTiltMotor.getSelectedSensorPosition(0);
+	}
+
 	public void outputToSmartDashboard()
 	{
 		//%s - insert a string
@@ -365,6 +410,15 @@ public class GearHandler extends Subsystem {
 	// 		gearInFeedMtrData = String.format("%s (%.0f%%)", "off", 0.0);
 	// 	}	
 	}
+	public void moveToZero()
+	{
+		_gearTiltMotor.set(ControlMode.PercentOutput,-0.5);
+		System.out.println("moving to zero");
+	}
+	public boolean getIsOnTiltHomeLimtSwitch()
+	{
+		return !_gearTiltMotor.getSensorCollection().isRevLimitSwitchClosed();
+	}
 
 	public void moveTowardsTargetPosition(double _targetPos){
 		_gearTiltMotor.set(ControlMode.MotionMagic, _targetPos);
@@ -376,7 +430,13 @@ public class GearHandler extends Subsystem {
 	}
 	public double getError()
 	{
-		return (_gearTiltMotor.getSelectedSensorPosition(0) - _targetPos*GEAR_TILT_ENCODER_COUNTS_PER_ROTATION)/GEAR_TILT_ENCODER_COUNTS_PER_ROTATION;
+		return Math.abs(_gearTiltMotor.getSelectedSensorPosition(0) - _targetPos);
 
 	}
+	public double getTargetPosition()
+	{
+		return (_targetPos);
+	}
+
+
 }

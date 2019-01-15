@@ -84,6 +84,7 @@ public class Robot extends TimedRobot
 	 */
 	@Override
 	public void autonomousInit() {
+		_gearHandler.stop();
 		_chassis.stop();
 		_chassis.zeroSensors();
 		_dashboard.getSelectedAuton().start();

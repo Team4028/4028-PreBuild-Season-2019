@@ -8,27 +8,35 @@ import edu.wpi.first.wpilibj.command.Command;
 public class GearTilt_GoToTargetPosition extends Command 
 {
     double _targetPosition;
-    double _tolerance;
-    double _timeout;
+    double _tolerance = 20;
+    double _timeout = 5;
     double _startTime;
     GearHandler _gearHandler = GearHandler.getInstance();
-    public GearTilt_GoToTargetPosition(double targetPos, double tolerance, double timeout)
+
+    public GearTilt_GoToTargetPosition(double targetPos, double timeout)
     {
         _targetPosition = targetPos;
-        _tolerance = tolerance;
         _timeout = timeout;
     }
+
+    public GearTilt_GoToTargetPosition(double targetPos)
+    {
+        _targetPosition = targetPos;
+    }
+
     @Override
     protected void initialize() 
     {
         _startTime = Timer.getFPGATimestamp();
-        GearHandler._targetPos = _targetPosition;
+        _gearHandler.moveTowardsTargetPosition(_targetPosition);
+
     }
     @Override
     protected void execute() 
     {
-        _gearHandler.moveTowardsTargetPosition(_targetPosition);
+
     }
+
     @Override
     protected boolean isFinished() 
     {

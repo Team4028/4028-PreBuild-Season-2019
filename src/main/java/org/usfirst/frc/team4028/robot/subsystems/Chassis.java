@@ -543,10 +543,10 @@ public class Chassis extends Subsystem
 	//=====================================================================================
 
 	public void printVelocityDiagnosticData(){
-		System.out.println("Left Actual Velocity: " + Double.toString(get_leftVelocityInchesPerSec()));
-		System.out.println("Left Target: " + Double.toString( _leftTargetVelocity));
-		System.out.println("Right Actual Velocity [in/s]: " + Double.toString(-get_rightVelocityInchesPerSec()));
-		System.out.println("Right Target Velocity: " + Double.toString(_rightTargetVelocity));
+		// System.out.println("Left Actual Velocity: " + Double.toString(get_leftVelocityInchesPerSec()));
+		// System.out.println("Left Target: " + Double.toString( _leftTargetVelocity));
+		// System.out.println("Right Actual Velocity [in/s]: " + Double.toString(-get_rightVelocityInchesPerSec()));
+		// System.out.println("Right Target Velocity: " + Double.toString(_rightTargetVelocity));
 
 	}
 	public void updateLogData(LogDataBE logData) 
