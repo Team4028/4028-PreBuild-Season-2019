@@ -42,8 +42,6 @@ public class Constants
 	public static final double PATH_FOLLOWING_GOAL_POS_TOLERANCE = 0.75;
 	public static final double PATH_FOLLOWING_GOAL_VEL_TOLERANCE = 12.0;
 	public static final double PATH_STOP_STEERING_DISTANCE = 9.0;
-	
-	public static final double PERCENT_OUTPUT = 0.0; //Needs to be changed
 
 	public static final double TRACK_SCRUBBING_FACTOR = 0.95; //0.9
 	// Units: setpoint, error, and output are in inches per second. 

@@ -18,6 +18,7 @@ import java.util.Date;
 
 import org.usfirst.frc.team4028.robot.auton.Paths;
 import org.usfirst.frc.team4028.robot.subsystems.Chassis;
+import org.usfirst.frc.team4028.robot.subsystems.GearHandler;
 import org.usfirst.frc.team4028.robot.util.GeneralUtilities;
 import org.usfirst.frc.team4028.robot.util.LogDataBE;
 import org.usfirst.frc.team4028.robot.util.MovingAverage;
@@ -35,6 +36,8 @@ public class Robot extends TimedRobot
 	private Dashboard _dashboard = Dashboard.getInstance();
 	
 	private Chassis _chassis = Chassis.getInstance();
+	private GearHandler _gearHandler = GearHandler.getInstance();
+
 	private OI _oi = OI.getInstance();
 	//private SwitchableCameraServer _camera = SwitchableCameraServer.getInstance();
 
@@ -53,6 +56,7 @@ public class Robot extends TimedRobot
 	public void robotInit() 
 	{
 		_chassis.stop();
+		_gearHandler.zeroSensors();
 		Paths.buildPaths();
 		_buildMsg = GeneralUtilities.WriteBuildInfoToDashboard(ROBOT_NAME);
 
