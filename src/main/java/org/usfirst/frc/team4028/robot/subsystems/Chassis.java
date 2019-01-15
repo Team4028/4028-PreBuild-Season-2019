@@ -279,25 +279,6 @@ public class Chassis extends Subsystem
 	public void moveToTargetAngle() 
 	{
 		// TODO: This code needs to be simplified. Should convert angles to vectors and use dot product to get angle difference.
-		/*if((_navX.getYaw() >= 0 && _targetAngle >= 0 && _isTurnRight && _navX.getYaw() > _targetAngle) ||
-			(_navX.getYaw() >= 0 && _targetAngle < 0 && _isTurnRight) ||
-			(_navX.getYaw() < 0 && _targetAngle < 0 && _isTurnRight && Math.abs(_navX.getYaw()) < Math.abs(_targetAngle))) {
-			_angleError = 360 - _navX.getYaw() + _targetAngle;
-		}
-		else if((_navX.getYaw() >= 0 && _targetAngle >= 0 && _isTurnRight && _navX.getYaw() < _targetAngle)||
-				(_navX.getYaw() >= 0 && _targetAngle >= 0 && !_isTurnRight && _navX.getYaw() > _targetAngle)||
-				(_navX.getYaw() >= 0 && _targetAngle < 0 && !_isTurnRight) ||
-				(_navX.getYaw() < 0 && _targetAngle >= 0 && _isTurnRight) ||
-				(_navX.getYaw() < 0 && _targetAngle < 0 && _isTurnRight && Math.abs(_navX.getYaw()) > Math.abs(_targetAngle)) ||
-				(_navX.getYaw() < 0 && _targetAngle < 0 && !_isTurnRight && Math.abs(_navX.getYaw()) < Math.abs(_targetAngle))) 
-		{
-			_angleError = _targetAngle - _navX.getYaw();
-		}		
-		else if((_navX.getYaw() >= 0 && _targetAngle >= 0 && !_isTurnRight && _navX.getYaw() < _targetAngle)||
-				(_navX.getYaw() < 0 && _targetAngle < 0 && !_isTurnRight && Math.abs(_navX.getYaw()) > Math.abs(_targetAngle))||
-				(_navX.getYaw() < 0 && _targetAngle >= 0 && !_isTurnRight)) {
-			_angleError = _targetAngle - _navX.getYaw() - 360;
-		}*/
 		if((!_isTurnRight && get_Heading() > _targetAngle) || (_isTurnRight && get_Heading() < _targetAngle))
 		{
 			_angleError = _targetAngle - get_Heading();

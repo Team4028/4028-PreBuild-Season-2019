@@ -24,7 +24,7 @@ public class Auton_CG_Score extends CommandGroup
             new Chassis_ArcadeDriveAction(.5, 0.3),
             new Gear_OutFeed(1)
         })));
-        addSequential(new WaitCommand("Outfeeding", 2));
+        addSequential(new WaitCommand("Outfeeding", 1));
         addSequential(new Gear_OutFeed(0));
     }
 }
