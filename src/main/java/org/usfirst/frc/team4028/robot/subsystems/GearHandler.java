@@ -67,11 +67,14 @@ public class GearHandler extends Subsystem {
 	private static final double GEAR_TILT_SCORING_POSITION_IN_ROTATIONS = 0.1;
 	private static final double GEAR_TILT_CHANGE_TO_V_BUS_POSITION_IN_ROTATIONS = 00.48;
 	private static final double TARGET_DEADBAND = 00.03;
+	private static final double GEAR_TILT_ENCODER_COUNTS_PER_ROTATION = 3580; //Calculated in 2019
 	
 	private static final double GEAR_MOVE_TO_HOME_VELOCITY_CMD = -0.40;   //set
 	private static final long GEAR_MAXIMUM_MOVE_TO_HOME_TIME_IN_MSEC = 5000;
 	private String _gearTiltState;
 	
+	public static double _targetPos = GEAR_TILT_AXIS_HOME_POSITION_IN_ROTATIONS;
+
 	private long _gearTiltAxisStateStartTime;
 	//private GEAR_TILT_HOMING_STATE _gearTiltAxisZeroCurrentState;
 	//private GEAR_TILT_MOVE_LAST_TARGET_POSITION _gearTiltMoveLastTargetPosition;
@@ -363,8 +366,17 @@ public class GearHandler extends Subsystem {
 	// 	}	
 	}
 
+	public void moveTowardsTargetPosition(double _targetPos){
+		_gearTiltMotor.set(ControlMode.MotionMagic, _targetPos);
+	}
+
 	protected void initDefaultCommand() 
 	{
+
+	}
+	public double getError()
+	{
+		return (_gearTiltMotor.getSelectedSensorPosition(0) - _targetPos*GEAR_TILT_ENCODER_COUNTS_PER_ROTATION)/GEAR_TILT_ENCODER_COUNTS_PER_ROTATION;
 
 	}
 }
