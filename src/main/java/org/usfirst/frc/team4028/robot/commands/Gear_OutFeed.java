@@ -5,7 +5,7 @@ import org.usfirst.frc.team4028.robot.subsystems.GearHandler;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 
-public class Gear_OutFeed extends Command
+public class Gear_OutFeed extends Command //Command for spinning up infeed motor to outfeed a gear
 {
     double _startTime;
     double _percentOutput;
@@ -23,7 +23,7 @@ public class Gear_OutFeed extends Command
     @Override
     protected void execute() 
     {
-        _gearHandler.SpinInfeedWheelsVBus(_percentOutput); //_percentOutput*.5*-1.0 is the current input for SpinInfeedWheelsVBus
+        _gearHandler.SpinInfeedWheelsVBus(_percentOutput); //_percentOutput*.5 is the current input for SpinInfeedWheelsVBus
     }
     @Override
     protected boolean isFinished() 

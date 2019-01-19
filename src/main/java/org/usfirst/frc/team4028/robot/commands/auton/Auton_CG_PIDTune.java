@@ -20,8 +20,6 @@ public class Auton_CG_PIDTune extends CommandGroup {
 
 		addSequential(new WaitCommand("safety_wait_command", 1.0));
 
-		//addSequential(new Chassis_ArcadeDriveAction(1, 2));
-
         addSequential(new Auton_PIDTune_spinUp(requiredSubsystem, talon, ControlMode.PercentOutput, 1));
         
         addSequential(new PrintCommand("Spin Up Complete"));

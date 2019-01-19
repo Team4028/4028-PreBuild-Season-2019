@@ -3,7 +3,6 @@ package org.usfirst.frc.team4028.robot.commands.auton;
 import java.util.Arrays;
 
 import org.usfirst.frc.team4028.robot.commands.Chassis_ArcadeDriveAction;
-import org.usfirst.frc.team4028.robot.commands.Chassis_DriveSetDistanceAction;
 import org.usfirst.frc.team4028.robot.commands.GearTilt_GoToTargetPosition;
 import org.usfirst.frc.team4028.robot.commands.Gear_OutFeed;
 import org.usfirst.frc.team4028.robot.commands.util.Simultaneous_Command;
@@ -14,7 +13,7 @@ import edu.wpi.first.wpilibj.command.WaitCommand;
 
 public class Auton_CG_Score extends CommandGroup
 {
-    public Auton_CG_Score()
+    public Auton_CG_Score() //Auton for testing simultaneous actions between driving and scoring
     {
         GearHandler _gearHandler = GearHandler.getInstance();
         addParallel(new Auton_ParallelStarter());
