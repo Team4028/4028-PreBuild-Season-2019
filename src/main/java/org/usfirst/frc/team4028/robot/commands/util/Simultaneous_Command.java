@@ -10,7 +10,6 @@ public class Simultaneous_Command extends Command
 {
 	private ArrayList<Command> _commandList;
 	private int _commandsNum;
-	private int count = 0;
 	boolean  isFirstCycle = true;
 
 	public Simultaneous_Command(List<Command> commandList) {

@@ -13,7 +13,8 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
  * This class is the glue that binds the controls on the physical operator
  * interface to the commands and command groups that allow control of the robot.
  */
-public class OI {
+public class OI 
+{
 	//#region CREATING BUTTONS
 	// One type of button is a joystick button which is any button on a
 	// joystick.
@@ -51,7 +52,8 @@ public class OI {
 	//=====================================================================================
 	private static OI _instance = new OI();
 	
-	public static OI getInstance() {
+	public static OI getInstance() 
+	{
 		return _instance;
 	}
 	
@@ -74,8 +76,10 @@ public class OI {
 		// Operator Controller -> Command Mapping
 	}
 		
-	public double getOperator_Climber_JoystickCmd() {
-		if(Math.abs(OperatorController.getY(Hand.kRight)) >= 0.5){
+	public double getOperator_Climber_JoystickCmd() 
+	{
+		if(Math.abs(OperatorController.getY(Hand.kRight)) >= 0.5)
+		{
 			// flip the sign, pushing the joystick up is a # < 0
 			return OperatorController.getY(Hand.kRight) * -1.0;
 		} 

@@ -7,7 +7,6 @@
 
 package org.usfirst.frc.team4028.robot;
 
-import edu.wpi.first.wpilibj.DriverStation;
 // #region Import Statements
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
@@ -157,10 +156,7 @@ public class Robot extends TimedRobot
 	
 	/** Method to Push Data to ShuffleBoard */
 	private void outputAllToDashboard() {
-		// limit spamming
-    	long scanCycleDeltaInMSecs = new Date().getTime() - _lastScanEndTimeInMSec;
-    	// add scan time sample to calc scan time rolling average
-    	//_scanTimeSamples.add(new BigDecimal(scanCycleDeltaInMSecs));
+		new Date().getTime();
     	
     	if((new Date().getTime() - _lastDashboardWriteTimeMSec) > 100) {
     		// each subsystem should add a call to a outputToSmartDashboard method

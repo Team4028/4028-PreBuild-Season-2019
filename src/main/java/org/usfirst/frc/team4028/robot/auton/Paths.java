@@ -1,5 +1,4 @@
 package org.usfirst.frc.team4028.robot.auton;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Hashtable;
 
@@ -9,8 +8,6 @@ import org.usfirst.frc.team4028.robot.auton.motion.Translation;
 
 import static org.usfirst.frc.team4028.robot.auton.PathBuilder.buildPathFromWaypoints;
 import static org.usfirst.frc.team4028.robot.auton.PathBuilder.getStraightPathWaypoints;
-import static org.usfirst.frc.team4028.robot.auton.PathBuilder.flipPath;
-import static org.usfirst.frc.team4028.robot.auton.PathBuilder.reversePath;
 
 public class Paths {
 	private static Hashtable<Center, Path> centerPaths = new Hashtable<Center, Path>();

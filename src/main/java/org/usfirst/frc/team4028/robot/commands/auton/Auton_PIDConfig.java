@@ -12,14 +12,8 @@ import org.usfirst.frc.team4028.robot.auton.util.beakCircularBuffer;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
-import org.usfirst.frc.team4028.robot.subsystems.Chassis;
-
-
-class Auton_PIDConfig extends Command{
-
-
-
-
+class Auton_PIDConfig extends Command
+{
 private int _samplesRequired;
 private int _samplesGathered = 0;
 private int _paramterSlot = 0;
@@ -28,8 +22,7 @@ private boolean _fQ;
 
 
 private TalonSRX _talon;
-private StringBuilder _sb;
-private beakCircularBuffer cBuffSpeed;
+    private beakCircularBuffer cBuffSpeed;
 private beakCircularBuffer cBuffError;
 private TalonSRX[] _slavesList = {};
 
@@ -45,8 +38,8 @@ public Auton_PIDConfig(Subsystem requiredSubsystem, TalonSRX talon, int srxParam
     this.cBuffSpeed = new beakCircularBuffer(_samplesRequired);
     this.cBuffError = new beakCircularBuffer(_samplesRequired);
     this._paramterSlot = srxParameterSlot;
-    this._sb = new StringBuilder();
-    this._desiredVelocity = desiredVelocity;
+    new StringBuilder();
+        this._desiredVelocity = desiredVelocity;
     requires(requiredSubsystem);
 }
 
@@ -60,8 +53,8 @@ public Auton_PIDConfig(Subsystem requiredSubsystem, TalonSRX talon, int srxParam
     this.cBuffSpeed = new beakCircularBuffer(_samplesRequired);
     this.cBuffError = new beakCircularBuffer(_samplesRequired);
     this._paramterSlot = srxParameterSlot;
-    this._sb = new StringBuilder();
-    this._desiredVelocity = desiredVelocity;
+    new StringBuilder();
+        this._desiredVelocity = desiredVelocity;
     this._slavesList = slaveTalons;
     requires(requiredSubsystem);
 }
@@ -75,10 +68,6 @@ protected void initialize()
 // Called repeatedly when this Command is scheduled to run
 protected void execute() 
 {
-    double outputSignal = _talon.getMotorOutputVoltage() / _talon.getBusVoltage();
-
-    double closedLoopError = Math.PI;
-
     if (_fQ)
     {
         double speed = _talon.getSelectedSensorVelocity(_paramterSlot);

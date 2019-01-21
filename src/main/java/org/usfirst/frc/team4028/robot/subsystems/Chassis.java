@@ -22,7 +22,6 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -44,20 +43,14 @@ public class Chassis extends Subsystem
 	
 	private NavXGyro _navX = NavXGyro.getInstance();
 	
-	public static final double ENCODER_COUNTS_PER_WHEEL_REV = 4539.5; //1097		// account for gear boxes
+	public static final double ENCODER_COUNTS_PER_WHEEL_REV = 4539.5; //For Sharkbait 2019
 
 	public double _leftMtrDriveSetDistanceCmd;
 	public double _rightMtrDriveSetDistanceCmd;
 	private double _targetAngle, _angleError;
 	private boolean _isTurnRight;
-	private static final double ENCODER_ROTATIONS_PER_DEGREE = 97.598; //ENCODER_COUNTS_PER_WHEEL_REV/360;//97.598; //
+	private static final double ENCODER_ROTATIONS_PER_DEGREE = 97.598;
 	private RobotState _robotState = RobotState.getInstance();
-	private double _leftMasterVelocityLoggingLastLogTime;
-	private double _leftMasterVelocityLoggingThisTime;
-	private double _leftMasterPreviousVelocity = 0;
-	private double _leftMasterCurrentVelocity = 0;
-	private boolean _isFirstTimeLoggingAccel = true;
-
 	public enum ChassisState
 	{
 		UNKNOWN,
@@ -141,7 +134,6 @@ public class Chassis extends Subsystem
 				_leftMaster.configMotionAcceleration(8400, 10);
 				_rightMaster.configMotionCruiseVelocity(1680, 10);
 				_rightMaster.configMotionAcceleration(8400, 10);
-				//moveToTargetAngle();
 				setHighGear(false);
 				return;
 				
@@ -186,7 +178,8 @@ public class Chassis extends Subsystem
 			setLeftRightCommand(ControlMode.PercentOutput, 0.0, 0.0);
 			DriverStation.reportError("Tipping Threshold", false);
 		} 
-		else if ((Math.abs(get_leftVelocityInchesPerSec() - get_rightVelocityInchesPerSec())) < 5.0) {
+		else if ((Math.abs(get_leftVelocityInchesPerSec() - get_rightVelocityInchesPerSec())) < 5.0) 
+		{
 			setLeftRightCommand(ControlMode.PercentOutput, throttle + 0.7 * turn, throttle - 0.7 * turn);
 		} 
 		else 
@@ -278,7 +271,6 @@ public class Chassis extends Subsystem
 
 	public void moveToTargetAngle() 
 	{
-		// TODO: This code needs to be simplified. Should convert angles to vectors and use dot product to get angle difference.
 		if((!_isTurnRight && get_Heading() > _targetAngle) || (_isTurnRight && get_Heading() < _targetAngle))
 		{
 			_angleError = _targetAngle - get_Heading();
@@ -360,26 +352,32 @@ public class Chassis extends Subsystem
 			setLeftRightCommand(ControlMode.Velocity, 0.0, 0.0);
 		}
 	}
-	public synchronized boolean isDoneWithPath() {
-		if (_chassisState == ChassisState.FOLLOW_PATH && _pathFollower != null){
-			if (_pathFollower.isFinished()){
+	public synchronized boolean isDoneWithPath() 
+	{
+		if (_chassisState == ChassisState.FOLLOW_PATH && _pathFollower != null)
+		{
+			if (_pathFollower.isFinished())
+			{
 				System.out.println("Chassis Done With Path");
 				return true;
 			}
-			else{
+			else
+			{
 				return false;
 			}
-		} else {
-           // System.out.println("Robot is not in path following mode");
+		}
+		else 
+		{
 			return true;
 		}
     }
 
     /** Path following e-stop */
-    public synchronized void forceDoneWithPath() {
+	public synchronized void forceDoneWithPath() 
+	{
         if (_chassisState == ChassisState.FOLLOW_PATH && _pathFollower != null)
             _pathFollower.forceFinish();
-		else{}
+		else {}
 		
            // System.out.println("Robot is not in path following mode");
 	}
@@ -450,15 +448,18 @@ public class Chassis extends Subsystem
 		_rightMaster.set(mode, rightCommand);
 	}
 	   
-    private static double rpmToInchesPerSecond(double rpm) {
+	private static double rpmToInchesPerSecond(double rpm) 
+	{
         return rotationsToInches(rpm) / 60;
     }
     
-    private static double rotationsToInches(double rot) {
+	private static double rotationsToInches(double rot) 
+	{
         return rot * (Constants.DRIVE_WHEEL_DIAMETER_IN * Math.PI);
     } 
 
-	private static double InchestoNU (double inches){
+	private static double InchestoNU (double inches)
+	{
 		return inches * ENCODER_COUNTS_PER_WHEEL_REV/(Constants.DRIVE_WHEEL_DIAMETER_IN * Math.PI);
 	}
 	private static double NUtoInches (double NU)
@@ -471,25 +472,31 @@ public class Chassis extends Subsystem
         return inches_per_second * ENCODER_COUNTS_PER_WHEEL_REV / (Constants.DRIVE_WHEEL_DIAMETER_IN * Math.PI * 10);
 	}
 
-	public static double NUper100msToInchesPerSec(double NU_per_100ms){
+	public static double NUper100msToInchesPerSec(double NU_per_100ms)
+	{
 		return NU_per_100ms*10*Constants.DRIVE_WHEEL_DIAMETER_IN*Math.PI/(ENCODER_COUNTS_PER_WHEEL_REV);
 	}
-	public double getLeftSpeedRPM() {
+	public double getLeftSpeedRPM() 
+	{
 		return _leftMaster.getSelectedSensorVelocity(0) * (600 / ENCODER_COUNTS_PER_WHEEL_REV);
 	}
 	
-	public double getRightSpeedRPM() {
+	public double getRightSpeedRPM() 
+	{
 		return -_rightMaster.getSelectedSensorVelocity(0) * (600 / ENCODER_COUNTS_PER_WHEEL_REV);
 	}
-	public double getLeftVelocityInchesPerSec() {
+	public double getLeftVelocityInchesPerSec() 
+	{
         return rpmToInchesPerSecond(getLeftSpeedRPM());
     }
 
-    public double getRightVelocityInchesPerSec() {
+	public double getRightVelocityInchesPerSec() 
+	{
         return rpmToInchesPerSecond(getRightSpeedRPM());
 	}
 	
-	private double getAcceleration(){
+	/*private double getAcceleration()
+	{
 		this._leftMasterVelocityLoggingLastLogTime = this._leftMasterVelocityLoggingThisTime;
 		this._leftMasterVelocityLoggingThisTime = Timer.getFPGATimestamp();
 		this._leftMasterPreviousVelocity = this._leftMasterCurrentVelocity;
@@ -504,7 +511,7 @@ public class Chassis extends Subsystem
 			return 0;
 		}
 
-	}
+	}*/
 	
 	private void estimateRobotState( double timestamp)
 	{
@@ -534,13 +541,9 @@ public class Chassis extends Subsystem
 	{
 		logData.AddData("Left Actual Velocity [in/s]", String.valueOf(GeneralUtilities.roundDouble(get_leftVelocityInchesPerSec(), 2)));
 		logData.AddData("Left Target Velocity [in/s]", String.valueOf(GeneralUtilities.roundDouble(_leftTargetVelocity, 2)));
-		//logData.AddData("Left Output Current", String.valueOf(GeneralUtilities.roundDouble(_leftMaster.getOutputCurrent(), 2)));
-	
-
+		
 		logData.AddData("Right Actual Velocity [in/s]", String.valueOf(GeneralUtilities.roundDouble(-get_rightVelocityInchesPerSec(), 2)));
 		logData.AddData("Right Target Velocity [in/s]", String.valueOf(GeneralUtilities.roundDouble(_rightTargetVelocity, 2)));
-		//logData.AddData("Right Output Current", String.valueOf(GeneralUtilities.roundDouble(_rightMaster.getOutputCurrent(), 2)));
-		//logData.AddData("Chassis Acceleration [in/s/s]", String.valueOf(GeneralUtilities.roundDouble(getAcceleration(), 2)));
 	
 		//logData.AddData("Pose X", String.valueOf(RobotState.getInstance().getLatestFieldToVehicle().getValue().getTranslation().x()));
 		//logData.AddData("Pose Y", String.valueOf(RobotState.getInstance().getLatestFieldToVehicle().getValue().getTranslation().y()));
@@ -559,11 +562,11 @@ public class Chassis extends Subsystem
 		SmartDashboard.putNumber("Chassis: Left Velocity", GeneralUtilities.roundDouble(get_leftVelocityInchesPerSec(), 2));
 		SmartDashboard.putNumber("Chassis: Right Velocity", GeneralUtilities.roundDouble(get_rightVelocityInchesPerSec(), 2));
 		
-		SmartDashboard.putNumber("Chassis: Left Wheel Target Velocity", -1.0); //GeneralUtilities.roundDouble(_leftTargetVelocity, 2));
-		SmartDashboard.putNumber("Chasiss: Right Wheel Target Velocity",  -1.0); // GeneralUtilities.roundDouble(_leftTargetVelocity, 2));
+		SmartDashboard.putNumber("Chassis: Left Wheel Target Velocity", -1.0); 
+		SmartDashboard.putNumber("Chasiss: Right Wheel Target Velocity",  -1.0); 
 		
 		SmartDashboard.putNumber("Chassis: Angle", GeneralUtilities.roundDouble(get_Heading(), 2));
-		SmartDashboard.putString("Chassis: Robot Pose", "N/A"); //RobotState.getInstance().getLatestFieldToVehicle().getValue().toString());
+		SmartDashboard.putString("Chassis: Robot Pose", "N/A"); 
 	}
 
 }

@@ -90,12 +90,15 @@ public class Dashboard
 		String gameData = DriverStation.getInstance().getGameSpecificMessage();
 		//String gameData = "LLL";
 		
-		if (gameData.length() > 0) {
+		if (gameData.length() > 0) 
+		{
 			_isSwitchLeft = (gameData.charAt(0) == 'L');
 			_isScaleLeft = (gameData.charAt(1) == 'L');
 			DriverStation.reportWarning("GAMEDATA: "+ gameData, false);
 			return true;
-		} else {
+		} 
+		else 
+		{
 			return false;
 		}
 	}
@@ -136,10 +139,10 @@ public class Dashboard
 			default:
 				return new Auton_DoNothing(); 
 		}
-		//return null;
 	}
 	
-	public void outputToDashboard() {
+	public void outputToDashboard() 
+	{
 		SmartDashboard.putString("AUTON SELECTED", _autonModeChooser.getSelected().toString());
 		SmartDashboard.putNumber("Angle", Chassis.getInstance().get_Heading());		
 		//SmartDashboard.putString("FMS Debug Msg", _fmsDebugMsg);

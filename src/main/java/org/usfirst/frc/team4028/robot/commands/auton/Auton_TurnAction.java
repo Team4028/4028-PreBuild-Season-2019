@@ -10,8 +10,7 @@ public class Auton_TurnAction extends Command
 
     private double _targetAngle;
     private boolean _isTurnRight;
-    private double _initialSign;
-
+    
     public Auton_TurnAction(double angle, boolean isTurnRight)
     {
         _targetAngle = angle;

@@ -28,12 +28,12 @@ public class GearHandler extends Subsystem {
 	
 	// --------------------------------------------------------
 	// define Tilt Motor PID constants
-	private static final int 	TILT_PID_P_PROFILE = 0;
+	//private static final int 	TILT_PID_P_PROFILE = 0;
 	private static final double TILT_PID_P_CONSTANT = 1.6;
-	private static final double TILT_PID_I_CONSTANT = 0.0;
+	//private static final double TILT_PID_I_CONSTANT = 0.0;
 	private static final double TILT_PID_D_CONSTANT = 50.0;
 	private static final double TILT_PID_F_CONSTANT = 0.2;
-	private static final double TILT_PID_RAMP_RATE = 0.1;
+	//private static final double TILT_PID_RAMP_RATE = 0.1;
 		
 	private static final double TILT_MAX_V_DOWN_TILT = +3.0; // Down is positive (RIP MAXIMUM...)
 	private static final double TILT_MAX_V_UP_TILT = -6.0;
@@ -43,10 +43,10 @@ public class GearHandler extends Subsystem {
 	private static final double FLOOR_POSITION = 1700;
 	
 	private static final double GEAR_TILT_AXIS_HOME_POSITION_IN_ROTATIONS = 00.00;
-	private static final double GEAR_TILT_SCORING_POSITION_IN_ROTATIONS = 0.1;
+	/*private static final double GEAR_TILT_SCORING_POSITION_IN_ROTATIONS = 0.1;
 	private static final double GEAR_TILT_CHANGE_TO_V_BUS_POSITION_IN_ROTATIONS = 00.48;
 	private static final double TARGET_DEADBAND = 00.03;
-	private static final double GEAR_TILT_ENCODER_COUNTS_PER_ROTATION = 3580; //Calculated in 2019
+	private static final double GEAR_TILT_ENCODER_COUNTS_PER_ROTATION = 3580; //Calculated in 2019*/
 	
 	public static double _targetPos = GEAR_TILT_AXIS_HOME_POSITION_IN_ROTATIONS;
 

@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.command.WaitCommand;
 
 public class Auton_CG_GearTest extends CommandGroup
 {
-    GearHandler _gearHandler = GearHandler.getInstance(); //Auton for testing the Gear-Related Motors
+    GearHandler _gearHandler = GearHandler.getInstance(); //Auton for testing the Gear-Related Motors, Currently tests outfeeding a gear onto a peg
     public Auton_CG_GearTest()
     {
         addParallel(new Auton_ParallelStarter());

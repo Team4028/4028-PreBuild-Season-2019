@@ -5,7 +5,7 @@ import org.usfirst.frc.team4028.robot.subsystems.GearHandler;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 
-public class GearTilt_GoToTargetPosition extends Command 
+public class GearTilt_GoToTargetPosition extends Command //Command for moving Anne to a selected position
 {
     double _targetPosition;
     double _tolerance = 20;
