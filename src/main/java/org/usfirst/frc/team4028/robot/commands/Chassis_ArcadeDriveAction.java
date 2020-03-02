@@ -10,12 +10,13 @@ public class Chassis_ArcadeDriveAction extends Command
     private Chassis _chassis = Chassis.getInstance();
     double _waitTime;
     double _throttle;
-    double _turn = 0; //Intitialized to 0 so that if constructor has no turn it will turn
+    double _turn = 0; //Intitialized to 0 so that if constructor has no turn it will not turn
     double _startTime; 
 
 
 
-    public Chassis_ArcadeDriveAction(double throttle, double waitTime){
+    public Chassis_ArcadeDriveAction(double throttle, double waitTime)
+    {
     _throttle = throttle;
     _waitTime = waitTime;
     }
@@ -29,16 +30,12 @@ public class Chassis_ArcadeDriveAction extends Command
 
     protected void initialize() {    	
         _startTime = Timer.getFPGATimestamp();
-		_chassis.setHighGear(false);
+		_chassis.setHighGear(true);
     }
 
     
     protected void execute() {
-        if ((Timer.getFPGATimestamp() - _startTime) > _waitTime) {
-			_chassis.stop();
-		} else {
-			_chassis.arcadeDrive(-_throttle, _turn);
-		}
+        _chassis.arcadeDrive(_throttle, _turn);
     }
 
     protected boolean isFinished() {

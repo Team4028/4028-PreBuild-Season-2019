@@ -1,7 +1,5 @@
 package org.usfirst.frc.team4028.robot.commands.auton;
 
-import edu.wpi.first.wpilibj.Talon;
-import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;

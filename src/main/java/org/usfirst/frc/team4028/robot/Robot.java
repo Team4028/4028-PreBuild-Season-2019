@@ -7,19 +7,17 @@
 
 package org.usfirst.frc.team4028.robot;
 
-import edu.wpi.first.wpilibj.DriverStation;
 // #region Import Statements
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.util.Date;
 
 import org.usfirst.frc.team4028.robot.auton.Paths;
-import org.usfirst.frc.team4028.robot.sensors.SwitchableCameraServer;
 import org.usfirst.frc.team4028.robot.subsystems.Chassis;
+import org.usfirst.frc.team4028.robot.subsystems.GearHandler;
 import org.usfirst.frc.team4028.robot.util.GeneralUtilities;
 import org.usfirst.frc.team4028.robot.util.LogDataBE;
 import org.usfirst.frc.team4028.robot.util.MovingAverage;
@@ -37,8 +35,10 @@ public class Robot extends TimedRobot
 	private Dashboard _dashboard = Dashboard.getInstance();
 	
 	private Chassis _chassis = Chassis.getInstance();
+	private GearHandler _gearHandler = GearHandler.getInstance();
+
 	private OI _oi = OI.getInstance();
-	private SwitchableCameraServer _camera = SwitchableCameraServer.getInstance();
+	//private SwitchableCameraServer _camera = SwitchableCameraServer.getInstance();
 
 	
 	// class level working variables
@@ -55,6 +55,7 @@ public class Robot extends TimedRobot
 	public void robotInit() 
 	{
 		_chassis.stop();
+		_gearHandler.zeroSensors();
 		Paths.buildPaths();
 		_buildMsg = GeneralUtilities.WriteBuildInfoToDashboard(ROBOT_NAME);
 
@@ -82,26 +83,12 @@ public class Robot extends TimedRobot
 	 */
 	@Override
 	public void autonomousInit() {
+		_gearHandler.stop();
 		_chassis.stop();
+		_chassis.zeroSensors();
 		_dashboard.getSelectedAuton().start();
 		Scheduler.getInstance().run();
-
-
-		_chassis.zeroSensors();
 		_chassis.setHighGear(true);
-
-		int retries = 100;
-		
-		while(!_dashboard.isGameDataReceived() && retries > 0) {
-			retries--;
-			try { 
-				Thread.sleep(5);
-			} catch (InterruptedException ie) {}
-		}
-		
-		if (retries == 0) {
-			DriverStation.reportError("Failed To Receive Game Data", false);
-		}
 
 		_lastDashboardWriteTimeMSec = new Date().getTime(); // snapshot time to control spamming
 		_dataLogger = GeneralUtilities.setupLogging("Auton"); // init data logging	
@@ -115,6 +102,9 @@ public class Robot extends TimedRobot
 	public void autonomousPeriodic() 
 	{
 		Scheduler.getInstance().run();
+		System.out.println(_chassis.get_isHighGear());
+		_chassis.printVelocityDiagnosticData();
+		
 		_chassis.updateChassis(Timer.getFPGATimestamp());
 		// System.out.println(_chassis.isDoneWithPath());
 		
@@ -136,6 +126,8 @@ public class Robot extends TimedRobot
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
 		_chassis.stop();
+		_chassis.zeroSensors();
+		_chassis.setHighGear(true);
 		_lastDashboardWriteTimeMSec = new Date().getTime(); // snapshot time to control spamming
 		_dataLogger = GeneralUtilities.setupLogging("Teleop"); // init data logging
 		_lastDashboardWriteTimeMSec = new Date().getTime(); // snapshot time to control spamming
@@ -147,6 +139,7 @@ public class Robot extends TimedRobot
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
+		
 		// ============= Refresh Dashboard =============
 		outputAllToDashboard();
 		_dashboard.outputToDashboard();
@@ -163,10 +156,7 @@ public class Robot extends TimedRobot
 	
 	/** Method to Push Data to ShuffleBoard */
 	private void outputAllToDashboard() {
-		// limit spamming
-    	long scanCycleDeltaInMSecs = new Date().getTime() - _lastScanEndTimeInMSec;
-    	// add scan time sample to calc scan time rolling average
-    	//_scanTimeSamples.add(new BigDecimal(scanCycleDeltaInMSecs));
+		new Date().getTime();
     	
     	if((new Date().getTime() - _lastDashboardWriteTimeMSec) > 100) {
     		// each subsystem should add a call to a outputToSmartDashboard method

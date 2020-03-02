@@ -27,7 +27,7 @@ public class Chassis_DriveSetDistanceAction extends Command
 	protected void execute() 
 	{
 		_chassis.updateChassis(Timer.getFPGATimestamp());
-		//_chassis.moveToTargetPosDriveSetDistance();
+		_chassis.moveToTargetPosDriveSetDistance();
 		System.out.println("Current Chassis Error: " +  Double.toString(_chassis.get_leftPos()-_chassis._leftMtrDriveSetDistanceCmd));
 	
 	}
@@ -52,7 +52,8 @@ public class Chassis_DriveSetDistanceAction extends Command
 	}
 
 	@Override
-	protected void end(){
+	protected void end()
+	{
 		_chassis.stop();
 	}
 
